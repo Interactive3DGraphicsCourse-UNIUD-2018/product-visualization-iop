@@ -1,10 +1,203 @@
-body { background-color: #f0f0f0;
-       margin: 0px;
-       overflow: hidden; }
+/* OVERALL */
+* { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif }
+a:hover { color: #000000 }
+body { margin-top: 0 }
 
-a { color: #000;
-    text-decoration: none; }
-			
-a:hover { color: #0080ff; }
+/* HEADER */
+header > a {  margin: 0;
+              font-size: 3em;
+              display: inline-block; 
+              background-color: transparent;
+              text-decoration: none;
+              color: #eee }
 
-canvas { width: 600px;}
+header img { background-color: transparent;
+             height: 70px }
+
+header > h1:hover { color: black }
+
+header { background: linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251, 202, 3, 1.0)) 100%;
+         padding: 0 10px 0 10px;
+         color: #eee }
+
+header * { background-color: cadetblue }
+
+/* NAV */
+nav { text-align: center;
+      border-style: none solid;
+      background: 
+        linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251, 202, 3, 1.0)) 
+        left 
+        bottom 
+        #777 
+        no-repeat;
+      background-size: 100% 3px;
+      background-color: transparent;
+      font-size: 1.5em;
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border-left-color: rgba(252, 16, 40, 1.0);
+      border-right-color: rgba(251, 202, 3, 1.0) }
+
+nav a { color: cadetblue;
+        padding: 0 10px 0 10px;
+        margin: 5px 0 5px 0;
+        text-decoration: none; 
+        display: inline;
+        border-left: 1px solid #eee;
+        white-space: nowrap;
+        background-image: linear-gradient(to right, rgba(126, 8, 20, 1.0), rgba(126, 101, 2, 1.0));
+        color: transparent;
+        background-clip: text }
+
+.dropdown { overflow: hidden;
+            display: inline;
+            position: relative }
+
+.dropdown .dropbtn { border: none;
+                     outline: none;
+                     color: cadetblue;
+                     font-size: 1em;
+                     margin: 0;
+                     background-color: transparent;
+                     padding: 0 10px 0 10px;
+                     margin: 5px 0 5px 0;
+                     border-left: 1px solid #eee;
+                     border-right: 1px solid #eee;
+                     background-image: linear-gradient(to right, rgba(126, 8, 20, 1.0), rgba(126, 101, 2, 1.0));
+                     color: transparent;
+                     background-clip: text }
+
+.dropdown-content { display: none;
+                    position: absolute;
+                    margin-left: 80vw; 
+                    right: 0;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 3;
+                    background-color: #fff;
+                    margin-top: -5px }
+
+.dropdown-content a { float: none;
+                      padding: 12px 0 12px 0;
+                      text-decoration: none;
+                      z-index: inherit;
+                      display: block;
+                      text-align: left;
+                      margin: 0 12px 0 12px;
+                      border-bottom: 1px solid #eee;
+                      border-left: none }
+
+.dropdown:hover .dropdown-content { display: block }
+
+.dropbtn:hover { color: black }
+
+nav * { background-color: white }
+
+/* quando il menu si attacca in cima alla finestra dopo lo scroll in basso */
+.sticky { position: fixed;
+          top: 0;
+          left: 1.54%;
+          right: 1.54%;
+          margin: auto;
+          background-color: white }
+
+/* CORPO */
+#corpo { width: 70%;
+         margin-left: auto; 
+         margin-right: auto;
+         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+         padding: 0px 20px 20px 20px; 
+         background-color: white }
+
+#corpo > h1 { color: cadetblue }
+
+.main { float: right }
+
+#corpo li > div, #corpo li > div span, #corpo li > div > div { background-color: inherit}
+
+/* FOOTER */
+#torna_su { display: none;
+            position: fixed;
+            z-index: 1;
+            border-style: solid;
+            border-color: cadetblue;
+            color: cadetblue;
+            padding: 23px 5px 23px 5px;
+            text-decoration: none;
+            right: 8%;
+            bottom: 2%;
+            border-radius: 50%;
+            font-size: 65%;
+            background-color: white }
+
+#torna_su:hover { background-color: cadetblue;
+                  color: #eee;
+                  box-shadow: 4px 4px rgba(0,0,0,0.2) }
+
+#torna_su > b, #torna_su > b:hover { background-color: inherit}
+
+/* quando il bottone torna su appare in fondo alla finestra dopo lo scroll in basso */
+.sticky_footer { display: block !important}
+
+/* RESPONSIVENESS */
+@media screen and (max-width: 905px) {
+    /* NAV */
+    nav { font-size: 1em }
+    
+    /* FOOTER */
+    #torna_su { right: 3% }
+}
+
+@media screen and (max-width: 600px) {
+    /* NAV */
+    .dropdown-content { right: 30vw;
+                        top: 53px }
+    
+    /* CORPO */
+    #corpo { width: 90%;
+             margin-left: auto;
+             margin-right: auto }
+    
+    /* FOOTER */
+    #torna_su { bottom: 0;
+                border-radius: 0;
+                background-color: cadetblue;
+                color: #eee;
+                padding: 5px;
+                font-size: 100%;
+                border-radius: 5px;
+                right: 0 }
+    
+    #torna_su:hover { box-shadow: none }
+}
+
+@media screen and (max-width: 500px) {
+    /* HEADER */
+    header > h1 { height: 75px }
+
+    /* NAV */
+    .dropdown-content { border-style: solid;
+                        border-color: cadetblue;
+                        border-radius: 5px;
+                        border-width: thin;
+                        right: 0;
+                        top: 26px }
+
+    .dropdown-content a { padding: 0; 
+                          margin: 1px}
+}
+
+@media screen and (max-width: 340px) { 
+    /* HEADER */
+    header > h1 { height: 100px }
+}
+
+@media screen and (max-width: 285px) {
+    /* HEADER */
+    header > h1 { height: 135px }
+
+    /* NAV */
+    .dropdown-content { right: 10vw;
+                        top: 53px }
+}
