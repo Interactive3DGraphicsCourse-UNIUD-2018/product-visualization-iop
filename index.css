@@ -1,8 +1,8 @@
 /* OVERALL */
-* { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif }
-a:hover { color: #000000 }
-body { margin-top: 0 }
+* { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif }
+a:hover { color: #000000!important }
+body { margin-top: 0;
+       margin-bottom: 0 }
 
 /* HEADER */
 header > a {  margin: 0;
@@ -139,6 +139,32 @@ nav * { background-color: white }
 
 /* quando il bottone torna su appare in fondo alla finestra dopo lo scroll in basso */
 .sticky_footer { display: block !important}
+
+footer { background: linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251, 202, 3, 1.0)) 100%;
+         bottom: 0;
+         width: 98.5%;
+         position: fixed;
+         border-top-left-radius: 5px;
+         border-top-right-radius: 5px;
+         color: white;
+         text-align: center; 
+         display: flex; 
+         justify-content: center }
+
+#footer_content { padding: 5px;
+                  margin: 5px 0;
+                  border-style: solid;
+                  border-color: white;
+                  border-width: 2px;
+                  border-radius: 10px }
+
+#footer_content > h1 { margin: 0;
+                       font-size: 1em;
+                       font-weight: normal }
+
+#footer_content > address, #footer_content > address a { font-style: normal;
+                                       text-decoration: none;
+                                       color: inherit }
 
 /* RESPONSIVENESS */
 @media screen and (max-width: 905px) {
