@@ -2,7 +2,8 @@
 * { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif }
 a:hover { color: #000000!important }
 body { margin-top: 0;
-       margin-bottom: 0 }
+       margin-bottom: 0;
+         }
 
 /* HEADER */
 header > a {  margin: 0;
@@ -18,10 +19,7 @@ header img { background-color: transparent;
 header > h1:hover { color: black }
 
 header { background: linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251, 202, 3, 1.0)) 100%;
-         padding: 0 10px 0 10px;
-         color: #eee }
-
-header * { background-color: cadetblue }
+         padding: 0 10px 0 10px }
 
 /* NAV */
 nav { text-align: center;
@@ -38,7 +36,8 @@ nav { text-align: center;
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px;
       border-left-color: rgba(252, 16, 40, 1.0);
-      border-right-color: rgba(251, 202, 3, 1.0) }
+      border-right-color: rgba(251, 202, 3, 1.0);
+      z-index: 2 }
 
 nav a { color: cadetblue;
         padding: 0 10px 0 10px;
@@ -110,11 +109,40 @@ nav * { background-color: white }
          padding: 0px 20px 20px 20px; 
          background-color: white }
 
-#corpo > h1 { color: cadetblue }
+#corpo > h1, #corpo h2 { margin: 0 }
 
-.main { float: right }
+#corpo button { padding: 0 0 0 5px;
+                text-align: left;
+                vertical-align: middle;
+                height: 50px;
+                float: right;
+                margin-top: -110px;
+                color: black;
+                border-style: none solid;
+                font-weight: bolder;
+                border-radius: 5px }
+
+#corpo button:hover { transform: scale(1.02) }
+
+#corpo button * { vertical-align: middle }
+
+#corpo button > img { position: relative;
+                      height: 50px;
+                      background-color: transparent;
+                      right: 10px;
+                      margin-right: -10px }
+
+nav img { top: 15px;
+          margin-top: -15px;
+          height: 40px;
+          position: relative;
+          background-color: transparent }
 
 #corpo li > div, #corpo li > div span, #corpo li > div > div { background-color: inherit}
+
+canvas { position: relative;
+         margin-left: 50%;
+         transform: translateX(-50%)}
 
 /* FOOTER */
 #torna_su { display: none;
@@ -142,8 +170,8 @@ nav * { background-color: white }
 
 footer { background: linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251, 202, 3, 1.0)) 100%;
          bottom: 0;
-         width: 98.5%;
-         position: fixed;
+         width: 100%;
+         position: relative;
          border-top-left-radius: 5px;
          border-top-right-radius: 5px;
          color: white;
@@ -152,19 +180,33 @@ footer { background: linear-gradient(to right, rgba(252, 16, 40, 1.0), rgba(251,
          justify-content: center }
 
 #footer_content { padding: 5px;
-                  margin: 5px 0;
-                  border-style: solid;
+                  margin: 10px 0;
+                  border-style: none solid;
                   border-color: white;
-                  border-width: 2px;
-                  border-radius: 10px }
+                  border-width: 1px; }
 
 #footer_content > h1 { margin: 0;
-                       font-size: 1em;
+                       font-size: 0.8em;
                        font-weight: normal }
+
+#footer_content > address { font-size: 0.8em }
 
 #footer_content > address, #footer_content > address a { font-style: normal;
                                        text-decoration: none;
                                        color: inherit }
+
+footer > p { float: left; 
+             position: absolute;
+             left: 5px;
+             margin: 0;
+             top: 50%;
+             transform: translateY(-50%);
+             width: 160px;
+             font-size: 0.8em }
+
+footer > p > a { text-decoration: none;
+                 color: white;
+                 font-weight: bolder }
 
 /* RESPONSIVENESS */
 @media screen and (max-width: 905px) {
