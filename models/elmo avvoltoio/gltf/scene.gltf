@@ -1,0 +1,558 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 29598,
+      "max": [
+        8.6649446487426758,
+        29.49742317199707,
+        6.5080051422119141
+      ],
+      "min": [
+        -14.663637161254883,
+        -1.3439168930053711,
+        -23.008953094482422
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 355176,
+      "componentType": 5126,
+      "count": 29598,
+      "max": [
+        0.99999260902404785,
+        1,
+        0.99998873472213745
+      ],
+      "min": [
+        -0.99999833106994629,
+        -0.99992913007736206,
+        -0.99977195262908936
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 29598,
+      "max": [
+        1,
+        0.99985873699188232,
+        0.99972993135452271,
+        1
+      ],
+      "min": [
+        -1,
+        -0.99999725818634033,
+        -0.99999231100082397,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 29598,
+      "max": [
+        1.0000934600830078,
+        0.99996381998062134
+      ],
+      "min": [
+        -0.00019189246813766658,
+        -4.6227007260313258e-05
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 101346,
+      "max": [
+        29597
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 710352,
+      "componentType": 5126,
+      "count": 340,
+      "max": [
+        3.9749026298522949,
+        3.3824465274810791,
+        -6.7147793769836426
+      ],
+      "min": [
+        -6.4480738639831543,
+        2.0308582782745361,
+        -8.6642045974731445
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 714432,
+      "componentType": 5126,
+      "count": 340,
+      "max": [
+        0.99997830390930176,
+        0.23689793050289154,
+        0.95654493570327759
+      ],
+      "min": [
+        -0.99996650218963623,
+        -0.97938024997711182,
+        -0.97090035676956177
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 473568,
+      "componentType": 5126,
+      "count": 340,
+      "max": [
+        0.99298077821731567,
+        0.24578721821308136,
+        0.97866171598434448,
+        1
+      ],
+      "min": [
+        -0.99294483661651611,
+        -0.29962649941444397,
+        -0.98103469610214233,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 405384,
+      "componentType": 5125,
+      "count": 1176,
+      "max": [
+        339
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 718512,
+      "componentType": 5126,
+      "count": 448,
+      "max": [
+        8.1875276565551758,
+        11.627225875854492,
+        -1.8400695323944092
+      ],
+      "min": [
+        -10.676230430603027,
+        -1.556883692741394,
+        -12.076413154602051
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 723888,
+      "componentType": 5126,
+      "count": 448,
+      "max": [
+        0.9974181056022644,
+        0.98929518461227417,
+        0.99957627058029175
+      ],
+      "min": [
+        -0.9975549578666687,
+        -0.99918472766876221,
+        -0.99882286787033081
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 479008,
+      "componentType": 5126,
+      "count": 448,
+      "max": [
+        1,
+        0.99886506795883179,
+        0.92674177885055542,
+        1
+      ],
+      "min": [
+        -0.98925220966339111,
+        -0.99929207563400269,
+        -0.92841249704360962,
+        1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 236784,
+      "componentType": 5126,
+      "count": 448,
+      "max": [
+        0.89456069469451904,
+        0.14839467406272888
+      ],
+      "min": [
+        0.44448211789131165,
+        0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 410088,
+      "componentType": 5125,
+      "count": 1920,
+      "max": [
+        447
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "el_roboto (https://sketchfab.com/el_roboto)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/models/4fc39165d2be4fc984c94537edbcf008",
+      "title": "Vulture's helmet MCU version"
+    },
+    "generator": "Sketchfab-3.19.3",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 417768,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 240368,
+      "byteOffset": 417768,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 729264,
+      "byteOffset": 658136,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 486176,
+      "byteOffset": 1387400,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1873576,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/V_helmet_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/V_helmet_normal.jpg"
+    },
+    {
+      "uri": "textures/V_helmet_baseColor.jpg"
+    },
+    {
+      "uri": "textures/V_Helmet_Visor_normal.png"
+    },
+    {
+      "uri": "textures/V_Helmet_Visor_metallicRoughness.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "name": "V_helmet",
+      "normalTexture": {
+        "index": 1,
+        "scale": 1,
+        "texCoord": 0
+      },
+      "occlusionTexture": {
+        "index": 0,
+        "strength": 0.42854420729999998,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "baseColorTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "metallicFactor": 1,
+        "metallicRoughnessTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "roughnessFactor": 1
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        1,
+        1,
+        0
+      ],
+      "name": "V_Eyes",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.059477511499999997,
+          0.97998638100000002,
+          0.0055083236000000001,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "name": "V_Helmet_Visor",
+      "normalTexture": {
+        "index": 3,
+        "scale": 1,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0,
+          0,
+          0,
+          0.91291920729999998
+        ],
+        "metallicFactor": 0,
+        "metallicRoughnessTexture": {
+          "index": 4,
+          "texCoord": 0
+        },
+        "roughnessFactor": 1
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object021_V_helmet_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object021_V_Eyes_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7
+          },
+          "indices": 8,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object021_V_Helmet Visor_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 10,
+            "POSITION": 9,
+            "TANGENT": 11,
+            "TEXCOORD_0": 12
+          },
+          "indices": 13,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [
+        -0.70710678118654746,
+        -0,
+        -0,
+        0.70710678118654757
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [
+        3
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "6f7d98c5e75f4e3f8a763e99546b1df9.fbx"
+    },
+    {
+      "children": [
+        4
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        5,
+        6,
+        7
+      ],
+      "matrix": [
+        0.99854261378278386,
+        -0.043240789625101979,
+        0.032293692456017743,
+        0,
+        0.023272951897387612,
+        -0.19487616151688161,
+        -0.98055164686677354,
+        0,
+        0.048693098305748868,
+        0.97987417396247922,
+        -0.19358581086807292,
+        0,
+        1.4280840158462524,
+        172.51075744628906,
+        11.619258880615234,
+        1
+      ],
+      "name": "Object021"
+    },
+    {
+      "mesh": 0,
+      "name": "Object021_V_helmet_0"
+    },
+    {
+      "mesh": 1,
+      "name": "Object021_V_Eyes_0"
+    },
+    {
+      "mesh": 2,
+      "name": "Object021_V_Helmet Visor_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    }
+  ]
+}
+
