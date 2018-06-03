@@ -68,14 +68,14 @@ nav a { color: cadetblue;
                      color: transparent;
                      background-clip: text }
 
-.dropdown-content { display: none;
-                    position: absolute;
-                    margin-left: 80vw; 
-                    right: 0;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                    z-index: 3;
-                    background-color: #fff;
-                    margin-top: -5px }
+.dropdown-content, .dropdown-content:active { display: none;
+                                              position: absolute;
+                                              margin-left: 80vw; 
+                                              right: 0;
+                                              box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                                              z-index: 3;
+                                              background-color: #fff;
+                                              margin-top: -5px }
 
 .dropdown-content a { float: none;
                       padding: 12px 0 12px 0;
@@ -100,6 +100,12 @@ nav * { background-color: white }
           right: 1.54%;
           margin: auto;
           background-color: white }
+
+nav img { top: 15px;
+          margin-top: -15px;
+          height: 40px;
+          position: relative;
+          background-color: transparent }
 
 /* CORPO */
 #corpo { width: 70%;
@@ -131,12 +137,6 @@ nav * { background-color: white }
                       background-color: transparent;
                       right: 10px;
                       margin-right: -10px }
-
-nav img { top: 15px;
-          margin-top: -15px;
-          height: 40px;
-          position: relative;
-          background-color: transparent }
 
 #corpo li > div, #corpo li > div span, #corpo li > div > div { background-color: inherit}
 

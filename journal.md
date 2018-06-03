@@ -8,3 +8,24 @@
 - A seconda del prodotto presentato, l'idea generale è quella di permettere all'utente di selezionare diversi tipi di materiali, il colore della luce, diversi sfondi, abilitare l'environment map e/o attivare il fullscreen.
 - La soluzione proposta per l'illuminazione della scena è quella di utilizzare due spot lights e un'eventuale environment map.
 - Abbiamo deciso di seguire l'opzione b al punto 7 della consegna, cioè scrivere gli shader da capo a partire da quelli visti a lezione.
+
+## 18/05/2018
+- Inizio costruzione della pagina web statica, aiutandosi con un esercizio completo già visto a lezione.
+- Costruzione di una shell vuota seguendo i dettami di html5, con un header, un nav e un footer.
+- Per il menu di navigazione abbiamo optato per poche voci che più frequentemente possono essere trovare su un sito di e-commerce: home, carrello, i prodotti e area personale.
+- L'area personale consiste a sua volta di un menu a tendina con voci anch'esse comuni come: log in/sign in, il mio account, i miei ordini, privacy.
+- Per simulare efficacemente un sito di e-commerce che vende memorabilia di film della Marvel (il nostro modello 3d è uno di essi), ma per evitare di commettere violazioni di copyrights, il logo della Marvel e alcuni altri nomi ben noti ad essa collegati sono stati volutamente modificati.
+- Tutti i link ipertestuali presenti nella pagina sono vuoti, cioè non reindirizzano a nessun'altra.
+
+## 23/05/2018
+- Inserimento primi contenuti nella pagina statica e regolazione dell'aspetto generale mediante css: logo Marvel modificato con gimp, titolo e sottotitolo del prodotto, prezzo, descrizione testuale e bottone di inserimento dello stesso nel carrello.
+- Il tema della pagina è semplice ma omogeneo: i colori scelti fanno chiaramente riferimento a quelli di Iron Man, siccome il prodotto che si vuole vendere è legato a tale saga cinematografica.
+- Non essendo semplice la regolazione delle dimensioni e il rapporto d'aspetto della canvas nel modello 3d, oltre al fatto che quello usato per il testing è provvisiorio, essa è stata lasciata alle dimensioni di default e posizionata al centro del corpo principale della pagina; c'è però la possibilità che possa risultare troppo piccola di dimensioni.
+
+## 29/05/2018
+- Aggiunta nel footer di un baner informativo oltre al già presente bottone "torna su"; tale banner conterrà gli indirizzi mail dei componenti del gruppo (funzionanti), contenuti graficamente in una sezione "Contattaci" delimitata da bordi verticali separatori.
+- Integrazione delle icone trovate su theNounProject nel menu di navigazione (non i quello a tendina) e nel bottone di inserimento del prodotto nel carrello.
+- Inserimento all'interno del footer dei credits alle icone, per non tenerli sotto alle icone stesse e quindi ripetuti 5 volte; si tratta di motivi più che altro estetici, giustificati anche dalle istruzioni trovate sul sito di theNounProject su come scrivere correttamente i credits.
+- Le icone sono in formato svg, per cancellare i credits in esse integrati basta eliminare parte del codice svg (che è mantenuto come file esterno), per cambiare invece il colore del disegno non si è ancora trovata una soluzione; ci si è risolti quindi a mantenere le icone al nero originale, poiché inserite in elementi del DOM con sfondi bianchi, e regolare l'aspetto del bottone di inserimento nel carrello di conseguenza.
+- Per la regolazione dell'aspetto delle icone prima di inserirle nella pagina è opportuno inoltre ricordare di impostarne lo sfondo a trasparente (tramite css) e di regolarne la dimensione, cioè "ritagliarle", modificando l'attributo viewBox del tag svg nel file originale.
+- La gui originale dell'esercizio visto in classe è stata mantenuta nel progetto provvisoriamente perché occupa più o meno l'area che occuperanno i controlli in input che l'utente potrà regolare sul modello 3d.
