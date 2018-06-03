@@ -1,5 +1,5 @@
 /* OVERALL */
-* { font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif }
+* { font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; letter-spacing: 0.5px }
 a:hover { color: #000000!important }
 body { margin-top: 0;
        margin-bottom: 0 }
@@ -141,7 +141,8 @@ nav img { top: 15px;
                 background-position: 0 0, 0 100%;
                 background-repeat: no-repeat;
                 background-size: 100% 3px;
-                background-color: transparent; margin-bottom: 10px }
+                background-color: transparent; 
+                margin-bottom: 20px }
 
 #corpo button:hover { transform: scale(1.02) }
 
