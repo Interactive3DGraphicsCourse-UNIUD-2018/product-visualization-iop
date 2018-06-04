@@ -68,9 +68,8 @@ nav a { color: cadetblue;
                      background-clip: text }
 
 .dropdown-content, .dropdown-content:active { display: none;
-                                              position: absolute;
-                                              margin-left: 80vw; 
-                                              right: 0;
+                                              position: absolute; 
+                                              right: 15px;
                                               box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                                               z-index: 3;
                                               background-color: #fff;
@@ -161,7 +160,9 @@ canvas { position: relative;
 
 .desc { width: 70%;
         margin-left: 50%;
-        transform: translateX(-50%) }
+        transform: translateX(-50%);
+        text-align: justify;
+        text-justify: inter-word; }
 
 /* FOOTER */
 #torna_su { display: none;
@@ -228,63 +229,122 @@ footer > p > a { text-decoration: none;
                  font-weight: bolder }
 
 /* RESPONSIVENESS */
-@media screen and (max-width: 905px) {
-    /* NAV */
-    nav { font-size: 1em }
+@media screen and (max-width: 920px) {
+    /* CORPO */
+    #corpo { width: 90%;
+             margin-left: auto;
+             margin-right: auto }
+
+    .desc { width: inherit }
     
     /* FOOTER */
     #torna_su { right: 3% }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 715px) {
     /* NAV */
-    .dropdown-content { right: 30vw;
-                        top: 53px }
+    nav { font-size: 1em }
     
     /* CORPO */
     #corpo { width: 90%;
              margin-left: auto;
              margin-right: auto }
-    
+
+   #corpo button { float: none;
+                   display: block; 
+                   margin-left: auto;
+                   margin-right: auto;
+                   margin-top: 5px }
+
+    #prezzo { float: none;
+              text-align: center }
+
+    #corpo h2 { padding-bottom: 15px }
+
+    canvas { margin: 0; 
+             left: 50% }
+}
+
+@media screen and (max-width: 650px) {
+    /* FOOTER */
+    #footer_content { width: 180px }
+}
+
+@media screen and (max-width: 545px) { 
+    /* NAV */
+    .dropdown-content { border-style: solid;
+                        border-color: rgba(252, 16, 40, 1.0);
+                        border-radius: 5px;
+                        border-width: thin;
+                        right: 100px; 
+                        top: 58px }
+
+    .dropdown-content a { padding: 5px; 
+                          margin: 2px }
+
+    /* CORPO */
+    .desc { text-align: left }
+
     /* FOOTER */
     #torna_su { bottom: 0;
                 border-radius: 0;
-                background-color: cadetblue;
-                color: #eee;
+                background-color: white;
+                color: rgba(252, 16, 40, 1.0);
                 padding: 5px;
                 font-size: 100%;
                 border-radius: 5px;
                 right: 0 }
-    
+
     #torna_su:hover { box-shadow: none }
+
+    footer { padding-bottom: 20px }
+
+    #footer_content { width: auto }
+
+    footer > p { width: auto;
+                 bottom: 0;
+                 top: auto;
+                 left: 0; 
+                 right: 0 }
 }
 
-@media screen and (max-width: 500px) {
-    /* HEADER */
-    header > h1 { height: 75px }
-
+@media screen and (max-width: 365px) {
     /* NAV */
-    .dropdown-content { border-style: solid;
-                        border-color: cadetblue;
-                        border-radius: 5px;
-                        border-width: thin;
-                        right: 0;
-                        top: 26px }
+    .dropdown-content { right: 20px;
+                        top: 23px }
 
-    .dropdown-content a { padding: 0; 
-                          margin: 1px}
+    /* per risolvere il problema del bordo extra nero visibile */
+    .dropdown .dropbtn { border-right-width: 2px }
 }
 
-@media screen and (max-width: 340px) { 
-    /* HEADER */
-    header > h1 { height: 100px }
+@media screen and (max-width: 330px) {
+    /* FOOTER */
+    footer { padding-bottom: 40px }
+    
+    #footer_content { border: none;
+                      border-bottom: solid 1px white;
+                      margin-left: 10px;
+                      margin-right: 10px }
+
+    footer > p { width: 180px;
+                 left: 50%; 
+                 transform: translateX(-50%);
+                 bottom: 10px }
 }
 
-@media screen and (max-width: 285px) {
-    /* HEADER */
-    header > h1 { height: 135px }
-
+@media screen and (max-width: 320px) {
     /* NAV */
-    .dropdown-content { right: 10vw;
-                        top: 53px }
+    .dropdown-content { right: 15px;
+                        top: 23px }
+
+    /* per risolvere il problema del bordo extra nero visibile */
+    .dropdown .dropbtn, nav > a { border: none }
+
+    nav > a:nth-of-type(2) { border-left: solid 1px #eee }
+}
+
+@media screen and (max-width: 310px) { 
+    /* NAV */
+    .dropdown-content { right: -8px;
+                        top: 57px }
 }
