@@ -54,7 +54,7 @@
         uniform vec3 clight1;
         uniform vec3 clight2;
 
-        uniform vec3 ambientLight;
+        //uniform vec3 ambientLight;
         
         uniform sampler2D specularMap;
         uniform sampler2D diffuseMap;
@@ -195,7 +195,7 @@
             vec3 outRadianceEnv = envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 
             //all lights
-            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv; //(ambientLight * cdiff * texture2D(aoMap, uVv).xyz);
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap, uVv).xyz);
             // gamma encode
             gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
         }
@@ -204,9 +204,10 @@
     <script>
         //DICHIARAZIONE VARIABILI
         var scene, camera, renderer, controls, stats, gui;
-        var lightParameters1, lightParameters2, ambientLightParameters, textureParameters, uniforms, clight;
+        var lightParameters1, lightParameters2, textureParameters, uniforms, clight;
         var diffuseMap, specularMap, roughnessMap, normalMap, aoMap, envMap;
-        
+        //var ambientLightParameters;
+
         function Start(){
             scene = new THREE.Scene();
 
@@ -236,12 +237,12 @@
                 intensity: 1.0
             }
 
-            ambientLightParameters = {
-                red: 0.2,
-                green: 0.2,
-                blue: 0.2,
-                intensity: 1.0
-            }
+            // ambientLightParameters = {
+            //     red: 0.2,
+            //     green: 0.2,
+            //     blue: 0.2,
+            //     intensity: 1.0
+            // }
 
             textureParameters = {
                 material: "Wood_StaggeredFloorPlanks",
@@ -275,7 +276,7 @@
                 normalMap: {type: "t", value: normalMap},
                 normalScale: {type: "v2", value: new THREE.Vector2(1,1)},
                 aoMap: {type: "t", value: aoMap},
-                ambientLight: {type: "v3", value: new THREE.Vector3()},
+                //ambientLight: {type: "v3", value: new THREE.Vector3()},
                 pointLightPosition1: {type: "v3", value: new THREE.Vector3()},
                 pointLightPosition2: {type: "v3", value: new THREE.Vector3()},
                 clight1: {type: "v3", value: new THREE.Vector3()},
@@ -399,11 +400,11 @@
             lightSettings.add(lightParameters2, 'blue').min(0).max(1).onChange( function(newVal){ Render() });
             lightSettings.add(lightParameters2, 'intensity').min(0).max(1).onChange( function(newVal){ Render() });
 
-            ambientLightSettings = gui.addFolder('Ambient Light Parameters');
-            ambientLightSettings.add(ambientLightParameters, 'red').min(0).max(1).onChange(function(newVal){ Render() });
-            ambientLightSettings.add(ambientLightParameters, 'green').min(0).max(1).onChange(function(newVal){ Render() });
-            ambientLightSettings.add(ambientLightParameters, 'blue').min(0).max(1).onChange(function(newVal){ Render() });
-            ambientLightSettings.add(ambientLightParameters, 'intensity').min(0).max(100).onChange(function(newVal){ Render() });
+            // ambientLightSettings = gui.addFolder('Ambient Light Parameters');
+            // ambientLightSettings.add(ambientLightParameters, 'red').min(0).max(1).onChange(function(newVal){ Render() });
+            // ambientLightSettings.add(ambientLightParameters, 'green').min(0).max(1).onChange(function(newVal){ Render() });
+            // ambientLightSettings.add(ambientLightParameters, 'blue').min(0).max(1).onChange(function(newVal){ Render() });
+            // ambientLightSettings.add(ambientLightParameters, 'intensity').min(0).max(100).onChange(function(newVal){ Render() });
 
             textureSettings = gui.addFolder('Texture Parameters');
             textureSettings.add(textureParameters, 'material', ['Wood_StaggeredFloorPlanks', 'Misc_SolarPanelLarge', 'Concrete_RockyFoundation', 'Metal_ThickGrating']).onChange(function(newVal){
@@ -430,7 +431,7 @@
             uniforms.normalMap.value = normalMap;
             uniforms.normalScale.value = new THREE.Vector2(textureParameters.normalScale, textureParameters.normalScale);
             uniforms.aoMap.value = aoMap;
-            uniforms.ambientLight.value = new THREE.Vector3(ambientLightParameters.red * ambientLightParameters.intensity, ambientLightParameters.green * ambientLightParameters.intensity, ambientLightParameters.blue * ambientLightParameters.intensity);
+            //uniforms.ambientLight.value = new THREE.Vector3(ambientLightParameters.red * ambientLightParameters.intensity, ambientLightParameters.green * ambientLightParameters.intensity, ambientLightParameters.blue * ambientLightParameters.intensity);
         }
 
         Start();
