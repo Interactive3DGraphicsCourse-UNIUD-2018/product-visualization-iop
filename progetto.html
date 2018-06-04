@@ -323,14 +323,22 @@
             //LOADER MODELLO GLTF
             var loader = new THREE.GLTFLoader();
             loader.load('models/reattore arc v3/scene.gltf', function(gltf){
-                gltf.scene.traverse(function(child){
-                    if(child.isMesh){
-                        child.material = ourMaterial;
-                    }
-                });
+                // gltf.scene.traverse(function(child){
+                //     if(child.isMesh){
+                //         child.material = ourMaterial;
+                //     }
+                // });
+
+                let path = gltf.scene;
+                let indexChild = 0;
+                //FARE UN CICLO FOR PER SCORRERE TUTTI I FIGLI E POI UNO SWITCH CASE PER I MATERIALI
+                //PER IL SETTAGGIO AUTOMATICO DA GUI METTERE NEL UPDATE UNIFORM LA CHIAMATA A QUESTA FUNZIONE
+                materialApply(path, ourMaterial, indexChild);
                 scene.add(gltf.scene);
                 gltf.scene.scale.multiplyScalar(1);
             });
+
+            //CORREGGERE TEXTURE IN MODO CHE NON UTILIZZI QUELLE DEL MODELLO
 
             //STATS
             stats = new Stats();
@@ -355,6 +363,15 @@
         function Render(){
             updateUniforms();
             renderer.render(scene, camera);
+        }
+
+        //FUNZIONE PER APPLICARE IL MATERIALE PASSATO AL FIGLIO SELEZIONATO
+        function materialApply(obj, materialToApply, indexChild){
+            while(!obj.children[0].isMesh){
+            obj = obj.children[0];
+            }
+            obj = obj.parent;
+            obj.children[indexChild].children[0].material = materialToApply;
         }
 
         //FUNZIONE LOADER TEXTURE
@@ -413,7 +430,6 @@
                 roughnessMap = loadTexture("textures/materials/" + newVal + "_Roughness.png");
                 normalMap = loadTexture("textures/materials/" + newVal + "_Normal.png");
                 aoMap = loadTexture("textures/materials/" + newVal + "_Ambient_Occlusion.png");
-                ourMaterial.needUpdate = true;
                 Render();
             });
             textureSettings.add(textureParameters, 'normalScale').min(-3).max(3).onChange(function(newVal){ Render() });
