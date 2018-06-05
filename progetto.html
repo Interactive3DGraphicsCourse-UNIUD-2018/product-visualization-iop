@@ -340,6 +340,10 @@
 
             //CORREGGERE TEXTURE IN MODO CHE NON UTILIZZI QUELLE DEL MODELLO
 
+            aoMap_total = loadTexture("textures/arc_reactor_Ambient Occlusion.png");
+            normalMap_total = loadTexture("textures/arc_reactor_Normal Map.png");
+            gltf.scene.overrideMaterial = //mettere shader con texture generali!!!
+
             //STATS
             stats = new Stats();
             stats.domElement.style.position = 'absolute';

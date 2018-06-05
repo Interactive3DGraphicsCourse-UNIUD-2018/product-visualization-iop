@@ -61,3 +61,4 @@
 
 ## 05/06/2018
 - Viene creata una funzione che permette di applicare il materiale desiderato al frammento del modello desiderato.
+- Tramite l'ausilio di Blender si provvede alla generazione di un modello unico in formato FBX dalla scena formato GLTF, si prosegue alla creazione di una normal map e una ambient occlusion map totali dell'oggetto tramite il programma Substance Designer
