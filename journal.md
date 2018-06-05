@@ -30,17 +30,34 @@
 - Per la regolazione dell'aspetto delle icone prima di inserirle nella pagina è opportuno inoltre ricordare di impostarne lo sfondo a trasparente (tramite css) e di regolarne la dimensione, cioè "ritagliarle", modificando l'attributo viewBox del tag svg nel file originale.
 - La gui originale dell'esercizio visto in classe è stata mantenuta nel progetto provvisoriamente perché occupa più o meno l'area che occuperanno i controlli in input che l'utente potrà regolare sul modello 3d.
 
+## 01/06/2018
+- Lo sviluppo della parte riguardante il rendering del modello scelto è iniziato costruendo uno shader di base che consenta un calcolo della luce di due pointLight e la computazione tramite texture dei termini speculare e diffusivo, della roughness e delle normali.
+- La scelta per la BRDF è ricaduta su una combinazione di calcolo del termine diffuse e di un Microfacet in modo da tenere in considerazione sia il termine speculare che quello diffusivo.
+- Le texture fin'ora utilizzate sono quelle fornite con gli esempi del corso.
+
+## 02/06/2018
+- Risolto un problema direvante dall'utilizzo della normal mapping per la perturbazione delle normali tramite modifica del codice adattando quindi il codice dell'esercizio eseguito in classe
+- Viene aggiunta una ambient light alla scena e le texture dell'ambient occlusion dei materiali per avere una prova del funzionamento del codice, l'ambient light verrà in seguito sostituita dalla environment light al momento dell'inserimento della environment map.
+- Lo shader è ancora applicato a tutto il modello e non ai singoli elementi per motivi di semplicità nella verifica del corretto funzionamento del codice.
+
 ## 03/06/2018
 - Cambiato il typeface della pagina, l'intenzione è di mantenerne uno sans-serif con una buona spaziatura tra caratteri e un aspetto distinto, che sia facilmente leggibile e adatto ai contenuti per il web.
 - Oltre al nome della Marvel, per evitare violazioni di copyrights abbiamo sostituito con nomi fittizi anche quelli del prodotto da vendere (originariamente Arc), dei personaggi menzionati, degli Avengers e della saga cinematografica di Iron Man.
-- La larghezza del testo descrittivo poso a seguito del modello 3d è stata ridotta al fine di "fare volume" e allinearla alla griglia immaginaria imposta dai margini della canvas soprastante; un'idea potrebbe essere quella di disporre i controlli per il modello in modo che spazino lungo tutta la larghezza del corpo centrale e non solo quella della canvas; in tal modo si manterrebbe un layout essenziale e uniforme ma non troppo "compresso".
+- La larghezza del testo descrittivo posto a seguito del modello 3d è stata ridotta al fine di "fare volume" e allinearla alla griglia immaginaria imposta dai margini della canvas soprastante; un'idea potrebbe essere quella di disporre i controlli per il modello in modo che spazino lungo tutta la larghezza del corpo centrale e non solo quella della canvas; in tal modo si manterrebbe un layout essenziale e uniforme ma non troppo "compresso".
 - Il bottone di aggiunta al carrello e il prezzo del prodotto da vendere sono stati spostati entrambi sulla destra, ma la loro posizione potrebbe essere ulteriormente aggiornata, per simulare quelli che sono i più popolari siti di e-commerce in circolazione.
 - L'aspetto del suddetto bottone è stato regolato in modo che sia in linea con il resto del tema della pagina web, ma è stata anche fornita un'affordance che faccia capire all'utente che tale bottone è interagibile, sotto forma di ingrandimento al passaggio del puntatore sul bottone stesso; essendo infatti dotato solo di bordi colorati, potrebbe essere scambiato per un semplice riquadro contente informazioni, anche se il testo dice chiaramente "aggiungi al carrello".
 - Per "decomprimere" il contenuto della pagina, quindi per aggiungere più spazio tra un elemento del DOM e l'altro, sono state regolare anche le spaziature tra essi nel css (spesso tramite l'attributo margin-bottom).
 - Anche l'aspetto del bottone "torna su" è stato regolato, ma potrebbe essere cambiato ulteriormente sia in forma che in colore perché non sembra essere del tutto soddisfacente.
+- Nello shader viene aggiunto il calcolo della environment light derivata dalla cube map applicata, temporaneamente si utilizza quella fornita con gli esempi. Per il calcolo della environment light si utilizza il metodo visto a lezione cioè sfruttare le mipmap al livello utile per il materiale al posto della IEM.
+- Rimane il problema dell'assenza di una texture dell'ambient occlusion a livello generale del modello perchè non si riesce ancora ad ottenerla da un file gltf tramite i programmi utilizzati.
+- Aggiunta di un pavimento provvisorio per verificarne l'effetto grafico
 
 ## 04/06/2018
 - Regolata tutta la responsiveness della pagina per gli elementi presenti finora, manca infatti la componente di interazione dell'utente con il modello 3d: è stato necessario mettere più tresholds del previsto, in quanto diversi elementi di tipo testuale (menu di navigazione, testo descrittivo, contenuti del footer) andavano a capo in punti diversi; sono stati talvolta anche ridisposti del tutto alcuni elementi per adattarsi al meglio alle proprietà dei display più piccoli.
 - Il bottone "torna su" è da abbellire, ed è da gestirne il posizionamento una volta che la pagina è stata scrollata fino in fondo, in modo che il contenuto del footer sia sempre leggibile; una proposta sarebbe quella di un meccanismo simile al menu "sticky", ma verso il basso.
 - Nel caso dei display più piccoli, un testo descrittivo giustificato risulta troppo spaziato e dispersivo, per questo oltre la soglia dei 545px è allineato a sinistra.
 - Anche il modello 3d è stato regolato di dimensioni nella parte della responsiveness, passa infatti dall'essere metà delle dimensioni della finestra ai rispettivi 9/10 una volta raggiunta la soglia dei 715px di larghezza: il cambiamento delle dimensioni è effettivo solo tramite un refresh della pagina dopo averla ristretta/allargata, ma per noi non costituisce un grande problema perché nella maggior parte dei casi si tratterà in primo luogo di caricare la pagina direttamente su schermi piccoli, e raramente sarebbe necessario per l'utente restringere la finestra così tanto da compromettere l'usabilità dell'applicazione.
+- Rimozione dell'ambient light in modo da utilizzare la environment light derivata dalla cube map come fonte di luce per l'ambient occlusion.
+
+## 05/06/2018
+- Viene creata una funzione che permette di applicare il materiale desiderato al frammento del modello desiderato.
