@@ -258,7 +258,7 @@
             aoMap = loadTexture("textures/materials/" + textureParameters.material + "_Ambient_Occlusion.png");
 
             var cube_loader = new THREE.CubeTextureLoader();
-            cube_loader.setPath("textures/cubemap/");
+            cube_loader.setPath("textures/cubemap/");   //fai cartelle interne per le diverse envmap
             var textureCube = cube_loader.load([
                 'posx.png', 'negx.png',
                 'posy.png', 'negy.png',
