@@ -48,7 +48,7 @@ nav a { color: cadetblue;
         white-space: nowrap;
         background-image: linear-gradient(to right, rgba(126, 8, 20, 1.0), rgba(126, 101, 2, 1.0));
         color: transparent;
-        background-clip: text }
+        -webkit-background-clip: text }
 
 .dropdown { overflow: hidden;
             display: inline;
@@ -65,7 +65,7 @@ nav a { color: cadetblue;
                      border-right: 1px solid #eee;
                      background-image: linear-gradient(to right, rgba(126, 8, 20, 1.0), rgba(126, 101, 2, 1.0));
                      color: transparent;
-                     background-clip: text }
+                     -webkit-background-clip: text }
 
 .dropdown-content, .dropdown-content:active { display: none;
                                               position: absolute; 
@@ -177,7 +177,7 @@ canvas { position: relative;
             bottom: 2%;
             border-radius: 50%;
             font-size: 65%;
-            background-color: #eee }
+            background-color: transparent }
 
 #torna_su:hover { background-color: rgba(252, 16, 40, 1.0);
                   color: #eee!important;
@@ -288,7 +288,7 @@ footer > p > a { text-decoration: none;
     /* FOOTER */
     #torna_su { bottom: 0;
                 border-radius: 0;
-                background-color: white;
+                background-color: transparent;
                 color: rgba(252, 16, 40, 1.0);
                 padding: 5px;
                 font-size: 100%;

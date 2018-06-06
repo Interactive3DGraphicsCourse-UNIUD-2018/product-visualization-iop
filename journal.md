@@ -36,7 +36,7 @@
 - Le texture fin'ora utilizzate sono quelle fornite con gli esempi del corso.
 
 ## 02/06/2018
-- Risolto un problema direvante dall'utilizzo della normal mapping per la perturbazione delle normali tramite modifica del codice adattando quindi il codice dell'esercizio eseguito in classe
+- Risolto un problema direvante dall'utilizzo della normal mapping per la perturbazione delle normali tramite modifica del codice adattando quindi il codice dell'esercizio eseguito in classe.
 - Viene aggiunta una ambient light alla scena e le texture dell'ambient occlusion dei materiali per avere una prova del funzionamento del codice, l'ambient light verrà in seguito sostituita dalla environment light al momento dell'inserimento della environment map.
 - Lo shader è ancora applicato a tutto il modello e non ai singoli elementi per motivi di semplicità nella verifica del corretto funzionamento del codice.
 
@@ -49,8 +49,8 @@
 - Per "decomprimere" il contenuto della pagina, quindi per aggiungere più spazio tra un elemento del DOM e l'altro, sono state regolare anche le spaziature tra essi nel css (spesso tramite l'attributo margin-bottom).
 - Anche l'aspetto del bottone "torna su" è stato regolato, ma potrebbe essere cambiato ulteriormente sia in forma che in colore perché non sembra essere del tutto soddisfacente.
 - Nello shader viene aggiunto il calcolo della environment light derivata dalla cube map applicata, temporaneamente si utilizza quella fornita con gli esempi. Per il calcolo della environment light si utilizza il metodo visto a lezione cioè sfruttare le mipmap al livello utile per il materiale al posto della IEM.
-- Rimane il problema dell'assenza di una texture dell'ambient occlusion a livello generale del modello perchè non si riesce ancora ad ottenerla da un file gltf tramite i programmi utilizzati.
-- Aggiunta di un pavimento provvisorio per verificarne l'effetto grafico
+- Rimane il problema dell'assenza di una texture dell'ambient occlusion a livello generale del modello perché non si riesce ancora ad ottenerla da un file gltf tramite i programmi utilizzati.
+- Aggiunta di un pavimento provvisorio per verificarne l'effetto grafico.
 
 ## 04/06/2018
 - Regolata tutta la responsiveness della pagina per gli elementi presenti finora, manca infatti la componente di interazione dell'utente con il modello 3d: è stato necessario mettere più tresholds del previsto, in quanto diversi elementi di tipo testuale (menu di navigazione, testo descrittivo, contenuti del footer) andavano a capo in punti diversi; sono stati talvolta anche ridisposti del tutto alcuni elementi per adattarsi al meglio alle proprietà dei display più piccoli.
@@ -61,4 +61,4 @@
 
 ## 05/06/2018
 - Viene creata una funzione che permette di applicare il materiale desiderato al frammento del modello desiderato.
-- Tramite l'ausilio di Blender si provvede alla generazione di un modello unico in formato FBX dalla scena formato GLTF, si prosegue alla creazione di una normal map e una ambient occlusion map totali dell'oggetto tramite il programma Substance Designer
+- Tramite l'ausilio di Blender si provvede alla generazione di un modello unico in formato FBX dalla scena formato GLTF, si prosegue alla creazione di una normal map e una ambient occlusion map totali dell'oggetto tramite il programma Substance Designer.
