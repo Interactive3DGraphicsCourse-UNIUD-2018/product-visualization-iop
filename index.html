@@ -17,25 +17,24 @@
 		<script src='lib/OBJLoader.js'></script>
     </head>
     <body>
-	<header>
-		<!-- titlolo del progetto -->
-		<a href="#"><img src="images/MarlevLogo.png"/></a>
-	</header>
-	<nav id="nav">
-		<!-- menu -->
-		<a href="#"><img src="images/noun_1686738_cc.svg">Home</a>
-		<a href="#"><img src="images/noun_1686727_cc.svg">Carrello</a>
-		<a href="#"><img src="images/noun_1686725_cc.svg">I prodotti</a>
-		<div class="dropdown">
-			<button class="dropbtn"><img src="images/noun_1686757_cc.svg">Area personale</button>
-			<div class="dropdown-content">
-				<a href="#">Log In / Sign In</a>
-				<a href="#">Il mio account</a>
-				<a href="#">I miei ordini</a>
-				<a href="#">Privacy</a>
+		<header>
+			<a href="#"><img src="images/MarlevLogo.png"/></a>
+		</header>
+		<nav id="nav">
+			<!-- menu -->
+			<a href="#"><img src="images/noun_1686738_cc.svg">Home</a>
+			<a href="#"><img src="images/noun_1686727_cc.svg">Carrello</a>
+			<a href="#"><img src="images/noun_1686725_cc.svg">I prodotti</a>
+			<div class="dropdown">
+				<button class="dropbtn"><img src="images/noun_1686757_cc.svg">Area personale</button>
+				<div class="dropdown-content">
+					<a href="#">Log In / Sign In</a>
+					<a href="#">Il mio account</a>
+					<a href="#">I miei ordini</a>
+					<a href="#">Privacy</a>
+				</div>
 			</div>
-		</div>
-		
+			
 			<script type="text/javascript">                
 				// When the user scrolls the page, execute myFunction
 				window.onscroll = function() {
@@ -284,10 +283,46 @@
 				render();
 			</script>
 
+			<!-- PERSONALIZZAZIONE DEL PRODOTTO -->
+			<form>
+				<fieldset>
+					<legend>Texture del reattore</legend>
+					<select>
+						<option onchange="updateUniforms('component', 'id_componente1')">Nome componente 1</option>
+						<option onchange="updateUniforms('component', 'id_componente2')">Nome componente 2</option>
+						<option onchange="updateUniforms('component', 'id_componente3')">Nome componente 3</option>
+					</select><br>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_legno')">Legno</button>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_oro')">Oro</button>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_acciaio')">Acciaio</button><br>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_bianca')">Plastica bianca</button>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_rossa')">Plastica rossa</button>
+					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_nera')">Plastica nera</button>
+				</fieldset>
+
+				<fieldset>
+					<legend>Colore della luce</legend>
+					<input type="radio" name="lighting" onclick="updateUniforms('lighting', new THREE.Vector3(1,1,1))" checked="checked">Bianco<br>
+					<input type="radio" name="lighting" onclick="updateUniforms('lighting', new THREE.Vector3(1,0,0))">Rosso<br>
+					<input type="radio" name="lighting" onclick="updateUniforms('lighting', new THREE.Vector3(0,1,0))">Verde<br>
+					<input type="radio" name="lighting" onclick="updateUniforms('lighting', new THREE.Vector3(0,0,1))">Blu<br>
+				</fieldset>
+
+				<fieldset>
+					<legend>Sfondo</legend>
+					<button type="button"onclick="updateUniforms('sfondo', 'bianco')">Bianco</button>
+					<button type="button" onclick="updateUniforms('sfondo', 'id_sfondo1')">Nome sfondo 1</button><br>
+					<button type="button" onclick="updateUniforms('sfondo', 'id_sfondo2')">Nome sfondo 2</button>
+					<button type="button" onclick="updateUniforms('sfondo', 'id_sfondo3')">Nome sfondo 3</button>
+				</fieldset>
+			</form>
+
+			<!-- DESCRIZIONE DEL PRODOTTO -->
 			<br><br><p class="desc">Progettato da Howard Spark e successivamente adattato dal figlio Tony, il reattore Ark &egrave; un dispositivo costruito per alimentare le Spark Industries prima e la Spark Tower poi. Una sua versione miniaturizzata fu integrata dallo stesso Tony Spark nella sua celeberrima armatura dell'Uomo di Ferro, per alimentare inizialmente l'elettromagnete inserito nel suo petto (utile a mantenterlo in vita) oltre al suddetto esoscheletro e alle sue armi.</p>
 			<p class="desc">La replica qui presentata riproduce fedelmente il reattore miniaturizzato visto nella saga cinematografica dei Vendicatori in scala 1:1, ed &egrave; dotata di un'elevata quantit&agrave; di dettagli nonch&eacute; di possibilit&agrave; di personalizzazione. Puoi scegliere infatti il materiale del prodotto, ma anche...</p>
 		</div>
 
+		<!-- FOOTER -->
         <footer>
 			<a id="torna_su" href="#"><b>TORNA SU</b></a>
 			<div id="footer_content">
