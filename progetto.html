@@ -258,7 +258,7 @@
             aoMap = loadTexture("textures/materials/" + textureParameters.material + "_Ambient_Occlusion.png");
 
             var cube_loader = new THREE.CubeTextureLoader();
-            cube_loader.setPath("textures/cubemap/");   //fai cartelle interne per le diverse envmap
+            cube_loader.setPath("textures/cubemap/");   //fare funzione che faccia queste due operazioni e prenda il path con il nome della env che gli passo
             var textureCube = cube_loader.load([
                 'posx.png', 'negx.png',
                 'posy.png', 'negy.png',
@@ -319,6 +319,7 @@
             }
             var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs, extensions: materialExtensions});
             ourMaterial.needUpdate = true;
+            ourMaterial.needsUpdate = true;
  
             //LOADER MODELLO GLTF
             var loader = new THREE.GLTFLoader();
@@ -340,9 +341,9 @@
 
             //CORREGGERE TEXTURE IN MODO CHE NON UTILIZZI QUELLE DEL MODELLO
 
-            aoMap_total = loadTexture("textures/arc_reactor_Ambient Occlusion.png");
-            normalMap_total = loadTexture("textures/arc_reactor_Normal Map.png");
-            gltf.scene.overrideMaterial = //mettere shader con texture generali!!!
+            // aoMap_total = loadTexture("textures/arc_reactor_Ambient Occlusion.png");
+            // normalMap_total = loadTexture("textures/arc_reactor_Normal Map.png");
+            // gltf.scene.overrideMaterial = //mettere shader con texture generali!!!
 
             //STATS
             stats = new Stats();
@@ -365,7 +366,7 @@
         }
 
         function Render(){
-            updateUniforms();
+            updateUniforms();   //da togliere considerando che la chiamo ai cambiamenti
             renderer.render(scene, camera);
         }
 
@@ -386,7 +387,7 @@
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                 texture.offset.set(0, 0);
                 texture.needUpdate = true;
-                Render();
+                Render();   //chiamare Update uniforms
             });
             return texture;
         }
@@ -452,6 +453,37 @@
             uniforms.normalScale.value = new THREE.Vector2(textureParameters.normalScale, textureParameters.normalScale);
             uniforms.aoMap.value = aoMap;
             //uniforms.ambientLight.value = new THREE.Vector3(ambientLightParameters.red * ambientLightParameters.intensity, ambientLightParameters.green * ambientLightParameters.intensity, ambientLightParameters.blue * ambientLightParameters.intensity);
+        }
+
+        function updateUniforms_new(arg1, arg2){
+            switch (arg1) {
+                case arg1 == "component":
+                    materialApply(gltf.scene, ourMaterial, arg2);
+                    Render();
+                    break;
+                case arg1 == "texture":
+                    uniforms.diffuseMap.value = loadTexture("textures/materials/" + arg2 + "_Diffuse.png");
+                    uniforms.specularMap.value = loadTexture("textures/materials/" + arg2 + "_Specular.png");
+                    uniforms.roughnessMap.value = loadTexture("textures/materials/" + arg2 + "_Roughness.png");
+                    uniforms.normalMap.value = loadTexture("textures/materials/" + arg2 + "_Normal.png");
+                    uniforms.aoMap.value = loadTexture("textures/materials/" + arg2 + "_Ambient_Occlusion.png");
+                    Render();
+                    break;
+                case arg1 == "lighting":
+                    uniforms.clight1.value = arg2;
+                    uniforms.clight2.value = arg2;
+                    break;
+                case arg1 == "sfondo":
+                    if(arg2 == "bianco"){
+                        uniforms.ambientLight.value = new THREE.Vector3(0.2, 0.2, 0.2);
+                        ourMaterial.fragmentShader = fs2;   //creare un fragment shader che faccia uguale all'altro ma non utilizzi la envmap e per l'AO usi l'ambient light
+                    } else {
+                        uniforms.envMap.value = textureCube;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         Start();
