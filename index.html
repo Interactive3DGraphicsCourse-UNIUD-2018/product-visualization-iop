@@ -288,16 +288,18 @@
 				<fieldset>
 					<legend>Texture del reattore</legend>
 					<select>
-						<option onchange="updateUniforms('component', 'id_componente1')">Nome componente 1</option>
-						<option onchange="updateUniforms('component', 'id_componente2')">Nome componente 2</option>
-						<option onchange="updateUniforms('component', 'id_componente3')">Nome componente 3</option>
+						<option onchange="updateUniforms('component', 0)">Front face del reattore</option>
+						<option onchange="updateUniforms('component', 5)">Corpo posteriore del reattore</option>
+						<option onchange="updateUniforms('component', 6)">Struttura di supporto del reattore</option>
+						<option onchange="updateUniforms('component', 8)">Montatura del sostegno</option>
+						<option onchange="updateUniforms('component', 9)">Base del sostegno</option>
 					</select><br>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_legno')">Legno</button>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_oro')">Oro</button>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_acciaio')">Acciaio</button><br>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_bianca')">Plastica bianca</button>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_rossa')">Plastica rossa</button>
-					<button type="button" onclick="updateUniforms('texture', 'id_texture_plastica_nera')">Plastica nera</button>
+					<button type="button" onclick="updateUniforms('texture', 'wood')">Legno</button>
+					<button type="button" onclick="updateUniforms('texture', 'gold')">Oro</button>
+					<button type="button" onclick="updateUniforms('texture', 'steel')">Acciaio</button><br>
+					<button type="button" onclick="updateUniforms('texture', 'white_plastic')">Plastica bianca</button>
+					<button type="button" onclick="updateUniforms('texture', 'red_plastic')">Plastica rossa</button>
+					<button type="button" onclick="updateUniforms('texture', 'black_plastic')">Plastica nera</button>
 				</fieldset>
 
 				<fieldset>
