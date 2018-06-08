@@ -41,6 +41,7 @@
         }
     </script>
 
+    <!-- shader con calcolo envMap -->
     <script type="text/x-glsl" id= "fragment">
         precision highp float;
         precision highp int;
@@ -53,14 +54,13 @@
         uniform vec3 pointLightPosition2;
         uniform vec3 clight1;
         uniform vec3 clight2;
-
-        //uniform vec3 ambientLight;
         
         uniform sampler2D specularMap;
         uniform sampler2D diffuseMap;
         uniform sampler2D roughnessMap;
         uniform sampler2D normalMap;
         uniform sampler2D aoMap;
+        uniform sampler2D aoMap_total;
         uniform samplerCube envMap;
 
         uniform vec2 normalScale;
@@ -195,7 +195,407 @@
             vec3 outRadianceEnv = envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 
             //all lights
-            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap, uVv).xyz);
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap, uVv).xyz) + (envLight * cdiff * texture2D(aoMap_total, uVv).xyz);
+            // gamma encode
+            gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
+        }
+    </script>
+
+    <!-- shader con ambientLight e senza envMap -->
+    <script type="text/x-glsl" id="fragment2">
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        varying vec2 uVv;
+
+        uniform vec3 pointLightPosition1;
+        uniform vec3 pointLightPosition2;
+        uniform vec3 clight1;
+        uniform vec3 clight2;
+
+        uniform vec3 ambientLight;
+        
+        uniform sampler2D specularMap;
+        uniform sampler2D diffuseMap;
+        uniform sampler2D roughnessMap;
+        uniform sampler2D normalMap;
+        uniform sampler2D aoMap;
+        uniform sampler2D aoMap_total;
+
+        uniform vec2 normalScale;
+        uniform vec2 textureRepeat;      
+        
+        const float PI = 3.14159;
+
+        vec3 cdiff;
+        vec3 cspec;
+        float roughness;
+
+        vec3 FSchlick(float lDoth){
+            return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+        }
+
+        float DGGX(float nDoth, float alfa){
+            float alfa2 = alfa * alfa;
+            float d = nDoth * nDoth * (alfa2 - 1.0) + 1.0;
+            return (alfa2 / (PI * d * d));
+        }
+
+        float G1(float dotProduct, float k){
+            return (dotProduct / (dotProduct * (1.0 - k) + k));
+        }
+
+        float GSmith(float nDotv, float nDotl){
+            float k = roughness * roughness;
+            return (G1(nDotl, k) * G1(nDotv, k));
+        }
+
+        vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm ) {
+
+			vec3 q0 = dFdx( eye_pos.xyz );
+			vec3 q1 = dFdy( eye_pos.xyz );
+			vec2 st0 = dFdx( uVv.st );
+			vec2 st1 = dFdy( uVv.st );
+
+			vec3 S = normalize(  q0 * st1.t - q1 * st0.t );
+			vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+			vec3 N =  surf_norm ;
+
+			vec3 mapN = normalize(texture2D( normalMap, uVv ).xyz * 2.0 - 1.0);
+			mapN.xy = normalScale * mapN.xy;
+			mat3 tsn = mat3( S, T, N );
+			return normalize( tsn * mapN );
+
+        }
+
+        void main(){
+
+            cdiff = texture2D( diffuseMap, uVv*textureRepeat ).rgb;
+            // texture in sRGB, linearize
+            cdiff = pow( cdiff, vec3(2.2));
+            cspec = texture2D( specularMap, uVv*textureRepeat ).rgb;
+            // texture in sRGB, linearize
+            cspec = pow( cspec, vec3(2.2));
+            roughness = texture2D( roughnessMap, uVv*textureRepeat).r; 
+            // no need to linearize roughness map
+
+            vec3 n = perturbNormal2Arb( vPosition, normalize( vNormal ));
+
+            vec3 v = normalize(-vPosition);
+            float nDotv = max(dot(n, v), 0.000001);
+
+            //light 1
+            vec4 lPosition1 = viewMatrix * vec4(pointLightPosition1, 1.0);
+            vec3 l1 = normalize(lPosition1.xyz - vPosition.xyz);
+            vec3 h1 = normalize(v + l1);
+            //small quantity to prevent division by 0
+            float nDotl1 = max(dot(n, l1), 0.000001);
+            float nDoth1 = max(dot(n, h1), 0.000001);
+            float l1Doth1 = max(dot(l1, h1), 0.000001);
+            float vDoth1 = max(dot(v, h1), 0.000001);
+    
+            vec3 fresnel1 = FSchlick(l1Doth1);
+            vec3 specularBRDF1 = FSchlick(l1Doth1) * GSmith(nDotv, nDotl1) * DGGX(nDoth1, roughness*roughness) / (4.0 * nDotl1 * nDotv);
+            vec3 diffuseBRDF1 = (vec3(1.0) - fresnel1) * cdiff/PI;
+            vec3 BRDF1 = specularBRDF1 + diffuseBRDF1;
+            vec3 outRadiance1 = PI * clight1 * nDotl1 * BRDF1;
+
+            //light 2
+            vec4 lPosition2 = viewMatrix * vec4(pointLightPosition2, 1.0);
+            vec3 l2 = normalize(lPosition2.xyz - vPosition.xyz);
+            vec3 h2 = normalize(v + l2);
+            //small quantity to prevent division by 0
+            float nDotl2 = max(dot(n, l2), 0.000001);
+            float nDoth2 = max(dot(n, h2), 0.000001);
+            float l2Doth2 = max(dot(l2, h2), 0.000001);
+            float vDoth2 = max(dot(v, h2), 0.000001);
+    
+            vec3 fresnel2 = FSchlick(l2Doth2);
+            vec3 specularBRDF2 = FSchlick(l2Doth2) * GSmith(nDotv, nDotl2) * DGGX(nDoth2, roughness*roughness) / (4.0 * nDotl2 * nDotv);
+            vec3 diffuseBRDF2 = (vec3(1.0) - fresnel2) * cdiff/PI;
+            vec3 BRDF2 = specularBRDF2 + diffuseBRDF2;
+            vec3 outRadiance2 = PI * clight2 * nDotl2 * BRDF2;
+
+            //all lights
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + (ambientLight * cdiff * texture2D(aoMap, uVv).xyz) + (ambientLight * cdiff * texture2D(aoMap_total, uVv).xyz);
+            // gamma encode
+            gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
+        }
+    </script>
+
+    <!-- shader con envmap, con metalness e baseColor -->
+    <script type="text/x-glsl" id="fragment-metalness">
+        precision highp float;
+        precision highp int;
+
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        varying vec2 uVv;
+
+        uniform vec3 pointLightPosition1;
+        uniform vec3 pointLightPosition2;
+        uniform vec3 clight1;
+        uniform vec3 clight2;
+        
+        uniform sampler2D baseColorMap;
+        uniform sampler2D roughnessMap;
+        uniform sampler2D normalMap;
+        uniform sampler2D metalnessMap;
+        uniform sampler2D aoMap_total;
+        uniform samplerCube envMap;
+
+        uniform vec2 normalScale;
+        uniform vec2 textureRepeat;  
+        
+        const float PI = 3.14159;
+
+        vec3 cdiff;
+        vec3 cspec;
+        float roughness;
+        float metalness;
+        vec3 baseColor;
+
+        #define saturate(a) clamp( a, 0.0, 1.0 )
+
+        float pow2(const in float x) {
+            return x*x;
+        }
+        float getSpecularMIPLevel(const in float blinnShininessExponent, const in int maxMIPLevel){
+            float maxMIPLevelScalar = float(maxMIPLevel);
+            float desiredMIPLevel = maxMIPLevelScalar - 0.79248 - 0.5 * log2(pow2(blinnShininessExponent) + 1.0);
+            return clamp(desiredMIPLevel, 0.0, maxMIPLevelScalar);
+        }
+        float GGXRoughnessToBlinnExponent(const in float ggxRoughness){
+            return (2.0 / pow2(ggxRoughness + 0.0001) - 2.0);
+        }
+        vec3 BRDF_Specular_GGX_Environment(vec3 normal, vec3 viewDir, const in vec3 cspec, const in float roughness){
+            float NdotV = saturate(dot(normal, viewDir));
+            const vec4 c0 = vec4(-1, -0.0275, -0.572, 0.022);
+            const vec4 c1 = vec4(1, 0.0425, 1.04, -0.04);
+            vec4 r = roughness * c0 + c1;
+            float a004 = min(r.x * r.x, exp2(-9.28 * NdotV)) * r.x + r.y;
+            vec2 AB = vec2(-1.04, 1.04) * a004 + r.zw;
+            return cspec * AB.x + AB.y;
+        }
+
+        vec3 FSchlick(float lDoth){
+            return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+        }
+
+        float DGGX(float nDoth, float alfa){
+            float alfa2 = alfa * alfa;
+            float d = nDoth * nDoth * (alfa2 - 1.0) + 1.0;
+            return (alfa2 / (PI * d * d));
+        }
+
+        float G1(float dotProduct, float k){
+            return (dotProduct / (dotProduct * (1.0 - k) + k));
+        }
+
+        float GSmith(float nDotv, float nDotl){
+            float k = roughness * roughness;
+            return (G1(nDotl, k) * G1(nDotv, k));
+        }
+
+        vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm ) {
+
+			vec3 q0 = dFdx( eye_pos.xyz );
+			vec3 q1 = dFdy( eye_pos.xyz );
+			vec2 st0 = dFdx( uVv.st );
+			vec2 st1 = dFdy( uVv.st );
+
+			vec3 S = normalize(  q0 * st1.t - q1 * st0.t );
+			vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+			vec3 N =  surf_norm ;
+
+			vec3 mapN = normalize(texture2D( normalMap, uVv ).xyz * 2.0 - 1.0);
+			mapN.xy = normalScale * mapN.xy;
+			mat3 tsn = mat3( S, T, N );
+			return normalize( tsn * mapN );
+
+        }
+        
+        vec3 inverseTransformDirection(in vec3 dir, in mat4 matrix){
+            return normalize((vec4(dir, 0.0) * matrix).xyz);
+        }
+        
+        void main(){
+
+            metalness = texture2D(metalnessMap, uVv * textureRepeat).r;
+            roughness = texture2D(roughnessMap, uVv * textureRepeat).r;
+            baseColor = texture2D(baseColorMap, uVv * textureRepeat).rgb;
+
+            cspec = mix(vec3(0.04), baseColor, metalness);
+            cdiff = mix(baseColor, vec3(0.0), metalness);
+
+            vec3 n = perturbNormal2Arb( vPosition, normalize( vNormal ));
+
+            vec3 v = normalize(-vPosition);
+            float nDotv = max(dot(n, v), 0.000001);
+
+            //light 1
+            vec4 lPosition1 = viewMatrix * vec4(pointLightPosition1, 1.0);
+            vec3 l1 = normalize(lPosition1.xyz - vPosition.xyz);
+            vec3 h1 = normalize(v + l1);
+            //small quantity to prevent division by 0
+            float nDotl1 = max(dot(n, l1), 0.000001);
+            float nDoth1 = max(dot(n, h1), 0.000001);
+            float l1Doth1 = max(dot(l1, h1), 0.000001);
+            float vDoth1 = max(dot(v, h1), 0.000001);
+    
+            vec3 fresnel1 = FSchlick(l1Doth1);
+            vec3 specularBRDF1 = FSchlick(l1Doth1) * GSmith(nDotv, nDotl1) * DGGX(nDoth1, roughness*roughness) / (4.0 * nDotl1 * nDotv);
+            vec3 diffuseBRDF1 = (vec3(1.0) - fresnel1) * cdiff/PI;
+            vec3 BRDF1 = specularBRDF1 + diffuseBRDF1;
+            vec3 outRadiance1 = PI * clight1 * nDotl1 * BRDF1;
+
+            //light 2
+            vec4 lPosition2 = viewMatrix * vec4(pointLightPosition2, 1.0);
+            vec3 l2 = normalize(lPosition2.xyz - vPosition.xyz);
+            vec3 h2 = normalize(v + l2);
+            //small quantity to prevent division by 0
+            float nDotl2 = max(dot(n, l2), 0.000001);
+            float nDoth2 = max(dot(n, h2), 0.000001);
+            float l2Doth2 = max(dot(l2, h2), 0.000001);
+            float vDoth2 = max(dot(v, h2), 0.000001);
+    
+            vec3 fresnel2 = FSchlick(l2Doth2);
+            vec3 specularBRDF2 = FSchlick(l2Doth2) * GSmith(nDotv, nDotl2) * DGGX(nDoth2, roughness*roughness) / (4.0 * nDotl2 * nDotv);
+            vec3 diffuseBRDF2 = (vec3(1.0) - fresnel2) * cdiff/PI;
+            vec3 BRDF2 = specularBRDF2 + diffuseBRDF2;
+            vec3 outRadiance2 = PI * clight2 * nDotl2 * BRDF2;
+
+            //Ambient Light
+            vec3 vReflect = reflect(vPosition, n);
+            vec3 r = inverseTransformDirection(vReflect, viewMatrix);
+            float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
+            float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent, 8);
+            vec3 envLight = textureCubeLodEXT(envMap, vec3(-r.x, r.yz), specularMIPLevel).rgb;
+            //texture in sRGB, linearize
+            envLight = pow(envLight, vec3(2.2));
+            vec3 outRadianceEnv = envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
+
+            //all lights
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap, uVv).xyz) + (envLight * cdiff * texture2D(aoMap_total, uVv).xyz);
+            // gamma encode
+            gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
+        }
+    </script>
+
+    <!-- shader con ambientLight e senza envMap, con metalness e baseColor -->
+    <script type="text/x-glsl" id="fragment-metalness2">
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        varying vec2 uVv;
+
+        uniform vec3 pointLightPosition1;
+        uniform vec3 pointLightPosition2;
+        uniform vec3 clight1;
+        uniform vec3 clight2;
+
+        uniform vec3 ambientLight;
+        
+        uniform sampler2D baseColorMap;
+        uniform sampler2D roughnessMap;
+        uniform sampler2D normalMap;
+        uniform sampler2D metalnessMap;
+        uniform sampler2D aoMap_total;
+
+        uniform vec2 normalScale;
+        uniform vec2 textureRepeat;      
+        
+        const float PI = 3.14159;
+
+        vec3 cdiff;
+        vec3 cspec;
+        float roughness;
+        float metalness;
+        vec3 baseColor;
+
+        vec3 FSchlick(float lDoth){
+            return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+        }
+
+        float DGGX(float nDoth, float alfa){
+            float alfa2 = alfa * alfa;
+            float d = nDoth * nDoth * (alfa2 - 1.0) + 1.0;
+            return (alfa2 / (PI * d * d));
+        }
+
+        float G1(float dotProduct, float k){
+            return (dotProduct / (dotProduct * (1.0 - k) + k));
+        }
+
+        float GSmith(float nDotv, float nDotl){
+            float k = roughness * roughness;
+            return (G1(nDotl, k) * G1(nDotv, k));
+        }
+
+        vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm ) {
+
+			vec3 q0 = dFdx( eye_pos.xyz );
+			vec3 q1 = dFdy( eye_pos.xyz );
+			vec2 st0 = dFdx( uVv.st );
+			vec2 st1 = dFdy( uVv.st );
+
+			vec3 S = normalize(  q0 * st1.t - q1 * st0.t );
+			vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+			vec3 N =  surf_norm ;
+
+			vec3 mapN = normalize(texture2D( normalMap, uVv ).xyz * 2.0 - 1.0);
+			mapN.xy = normalScale * mapN.xy;
+			mat3 tsn = mat3( S, T, N );
+			return normalize( tsn * mapN );
+
+        }
+
+        void main(){
+
+            metalness = texture2D(metalnessMap, uVv * textureRepeat).r;
+            roughness = texture2D(roughnessMap, uVv * textureRepeat).r;
+            baseColor = texture2D(baseColorMap, uVv * textureRepeat).rgb;
+
+            cspec = mix(vec3(0.04), baseColor, metalness);
+            cdiff = mix(baseColor, vec3(0.0), metalness);
+
+            vec3 n = perturbNormal2Arb( vPosition, normalize( vNormal ));
+
+            vec3 v = normalize(-vPosition);
+            float nDotv = max(dot(n, v), 0.000001);
+
+            //light 1
+            vec4 lPosition1 = viewMatrix * vec4(pointLightPosition1, 1.0);
+            vec3 l1 = normalize(lPosition1.xyz - vPosition.xyz);
+            vec3 h1 = normalize(v + l1);
+            //small quantity to prevent division by 0
+            float nDotl1 = max(dot(n, l1), 0.000001);
+            float nDoth1 = max(dot(n, h1), 0.000001);
+            float l1Doth1 = max(dot(l1, h1), 0.000001);
+            float vDoth1 = max(dot(v, h1), 0.000001);
+    
+            vec3 fresnel1 = FSchlick(l1Doth1);
+            vec3 specularBRDF1 = FSchlick(l1Doth1) * GSmith(nDotv, nDotl1) * DGGX(nDoth1, roughness*roughness) / (4.0 * nDotl1 * nDotv);
+            vec3 diffuseBRDF1 = (vec3(1.0) - fresnel1) * cdiff/PI;
+            vec3 BRDF1 = specularBRDF1 + diffuseBRDF1;
+            vec3 outRadiance1 = PI * clight1 * nDotl1 * BRDF1;
+
+            //light 2
+            vec4 lPosition2 = viewMatrix * vec4(pointLightPosition2, 1.0);
+            vec3 l2 = normalize(lPosition2.xyz - vPosition.xyz);
+            vec3 h2 = normalize(v + l2);
+            //small quantity to prevent division by 0
+            float nDotl2 = max(dot(n, l2), 0.000001);
+            float nDoth2 = max(dot(n, h2), 0.000001);
+            float l2Doth2 = max(dot(l2, h2), 0.000001);
+            float vDoth2 = max(dot(v, h2), 0.000001);
+    
+            vec3 fresnel2 = FSchlick(l2Doth2);
+            vec3 specularBRDF2 = FSchlick(l2Doth2) * GSmith(nDotv, nDotl2) * DGGX(nDoth2, roughness*roughness) / (4.0 * nDotl2 * nDotv);
+            vec3 diffuseBRDF2 = (vec3(1.0) - fresnel2) * cdiff/PI;
+            vec3 BRDF2 = specularBRDF2 + diffuseBRDF2;
+            vec3 outRadiance2 = PI * clight2 * nDotl2 * BRDF2;
+
+            //all lights
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + (ambientLight * cdiff * texture2D(aoMap_total, uVv).xyz);
             // gamma encode
             gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
         }
@@ -205,8 +605,9 @@
         //DICHIARAZIONE VARIABILI
         var scene, camera, renderer, controls, stats, gui;
         var lightParameters1, lightParameters2, textureParameters, uniforms, clight;
-        var diffuseMap, specularMap, roughnessMap, normalMap, aoMap, envMap;
-        //var ambientLightParameters;
+        var diffuseMap, specularMap, roughnessMap, normalMap, aoMap, envMap, metalnessMap, aoMap_total;
+        var ambientLightParameters;
+        var textureCube, env;
 
         function Start(){
             scene = new THREE.Scene();
@@ -237,36 +638,42 @@
                 intensity: 1.0
             }
 
-            // ambientLightParameters = {
-            //     red: 0.2,
-            //     green: 0.2,
-            //     blue: 0.2,
-            //     intensity: 1.0
-            // }
-
-            textureParameters = {
-                material: "Wood_StaggeredFloorPlanks",
-                repeatS: 1.0,
-                repeatT: 1.0,
-                normalScale: 1
+            ambientLightParameters = {
+                red: 0.2,
+                green: 0.2,
+                blue: 0.2,
+                intensity: 0.5
             }
 
-            diffuseMap = loadTexture("textures/materials/" + textureParameters.material + "_Diffuse.png");
-            specularMap = loadTexture("textures/materials/" + textureParameters.material + "_Specular.png");
-            roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "_Roughness.png");
-            normalMap = loadTexture("textures/materials/" + textureParameters.material + "_Normal.png");
-            aoMap = loadTexture("textures/materials/" + textureParameters.material + "_Ambient_Occlusion.png");
+            textureParameters = {
+                material: "CarbonFiber",
+                repeatS: 1.0,
+                repeatT: 1.0,
+                normalScale: 1,
+                metalness: 1
+            }
 
-            var cube_loader = new THREE.CubeTextureLoader();
-            cube_loader.setPath("textures/cubemap/");   //fare funzione che faccia queste due operazioni e prenda il path con il nome della env che gli passo
-            var textureCube = cube_loader.load([
-                'posx.png', 'negx.png',
-                'posy.png', 'negy.png',
-                'posz.png', 'negz.png'
-            ]);
-            //scelta del background
-            scene.background = textureCube;
-            textureCube.minFilter = THREE.LinearMipMapLinearFilter;
+            if(textureParameters.metalness == 0){
+                diffuseMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Diffuse.png");
+                specularMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Specular.png");
+                roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Roughness.png");
+                normalMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Normal.png");
+                aoMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Ambient_Occlusion.png");
+                baseColorMap = null;
+                metalnessMap = null;
+            } else if(textureParameters.metalness == 1){
+                roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Roughness.png");
+                normalMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Normal.png");
+                baseColorMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Base_Color.png");
+                metalnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Metallic.png");
+                diffuseMap = null;
+                specularMap = null;
+                aoMap = null;
+            }
+
+            aoMap_total = null;
+            env = "giardino";
+            textureCube = loadEnv("textures/cubemap/" + env + "/");
 
             uniforms = {
                 specularMap: {type: "t", value: specularMap},
@@ -276,74 +683,75 @@
                 normalMap: {type: "t", value: normalMap},
                 normalScale: {type: "v2", value: new THREE.Vector2(1,1)},
                 aoMap: {type: "t", value: aoMap},
-                //ambientLight: {type: "v3", value: new THREE.Vector3()},
+                metalnessMap: {type: "t", value: metalnessMap},
+                baseColorMap: {type: "t", value: baseColorMap},
+                ambientLight: {type: "v3", value: new THREE.Vector3()},
                 pointLightPosition1: {type: "v3", value: new THREE.Vector3()},
                 pointLightPosition2: {type: "v3", value: new THREE.Vector3()},
                 clight1: {type: "v3", value: new THREE.Vector3()},
                 clight2: {type: "v3", value: new THREE.Vector3()},
-                textureRepeat: {type: "v2", value: new THREE.Vector2(1,1)}
+                textureRepeat: {type: "v2", value: new THREE.Vector2(1,1)},
+
+                aoMap_total: {type: "t", value: aoMap_total}
             }
 
             //DICHIARAZIONE DEGLI SHADERS
             vs = document.getElementById("vertex").textContent;
             fs = document.getElementById("fragment").textContent;
+            fs2 = document.getElementById("fragment2").textContent;
+            fs_metal = document.getElementById("fragment-metalness").textContent;
+            fs_metal2 = document.getElementById("fragment-metalness2").textContent;
+
+            //FARE PIù UNIFORMS DIVERSI PER OGNI SHADER COSì DA EVITARE GLI IF(){}
 
             //OGGETTI LUCI
             var lightGeometry = new THREE.SphereBufferGeometry(1, 16, 16);
             var lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true});
 
             var lightMesh1 = new THREE.Mesh(lightGeometry, lightMaterial);
-            lightMesh1.position.set(-10, -3, 10);
+            lightMesh1.position.set(-10, 0, 3);
             uniforms.pointLightPosition1.value = new THREE.Vector3(lightMesh1.position.x, lightMesh1.position.y, lightMesh1.position.z);
 
             var lightMesh2 = new THREE.Mesh(lightGeometry, lightMaterial);
-            lightMesh2.position.set(0, 10, -10);
+            lightMesh2.position.set(0, 10, 0);
             uniforms.pointLightPosition2.value = new THREE.Vector3(lightMesh2.position.x, lightMesh2.position.y, lightMesh2.position.z);
 
             //togliere per evitare di vedere i pallini gialli
             scene.add(lightMesh1);
             scene.add(lightMesh2);
 
-            //OGGETTO PAVIMENTO //rivedere!!!
-            var planeGeometry = new THREE.PlaneBufferGeometry(100, 100, 32);
-            var planeMaterial = new THREE.MeshBasicMaterial({ color: 0xfefefe, side: THREE.DoubleSide });
-            var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            plane.rotation.x = 90 * Math.PI / 180;
-            plane.position.y = -2; 
-            scene.add(plane);
+            //parametri di default
+            uniforms.clight1.value = new THREE.Vector3(lightParameters1.red * lightParameters1.intensity, lightParameters1.green * lightParameters1.intensity, lightParameters1.blue * lightParameters1.intensity);
+            uniforms.clight2.value = new THREE.Vector3(lightParameters2.red * lightParameters2.intensity, lightParameters2.green * lightParameters2.intensity, lightParameters2.blue * lightParameters2.intensity);
+            uniforms.ambientLight.value = new THREE.Vector3(ambientLightParameters.red * ambientLightParameters.intensity, ambientLightParameters.green * ambientLightParameters.intensity, ambientLightParameters.blue * ambientLightParameters.intensity);
             
             //DEFINIZIONE MATERIALI PERSONALIZZATI
             materialExtensions = {
                 derivatives: true, //set to use derivatives
                 shaderTextureLOD: true //set to use shader texture LOD
             }
-            var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs, extensions: materialExtensions});
+            if(textureParameters.metalness == 0){
+                var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs2, extensions: materialExtensions});
+            } else {
+                var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs_metal2, extensions: materialExtensions});
+            }
+
             ourMaterial.needUpdate = true;
             ourMaterial.needsUpdate = true;
  
             //LOADER MODELLO GLTF
             var loader = new THREE.GLTFLoader();
             loader.load('models/reattore arc v3/scene.gltf', function(gltf){
-                // gltf.scene.traverse(function(child){
-                //     if(child.isMesh){
-                //         child.material = ourMaterial;
-                //     }
-                // });
-
                 let path = gltf.scene;
-                let indexChild = 0;
-                //FARE UN CICLO FOR PER SCORRERE TUTTI I FIGLI E POI UNO SWITCH CASE PER I MATERIALI
-                //PER IL SETTAGGIO AUTOMATICO DA GUI METTERE NEL UPDATE UNIFORM LA CHIAMATA A QUESTA FUNZIONE
-                materialApply(path, ourMaterial, indexChild);
+                for(let i = 0; i < 10; i++ ){
+                    if (i == 0 || i == 3 || i == 5 || i == 6 || i == 8 || i == 9) {
+                        materialApply(path, ourMaterial, i);        
+                    } else {
+                    }
+                }
                 scene.add(gltf.scene);
                 gltf.scene.scale.multiplyScalar(1);
             });
-
-            //CORREGGERE TEXTURE IN MODO CHE NON UTILIZZI QUELLE DEL MODELLO
-
-            // aoMap_total = loadTexture("textures/arc_reactor_Ambient Occlusion.png");
-            // normalMap_total = loadTexture("textures/arc_reactor_Normal Map.png");
-            // gltf.scene.overrideMaterial = //mettere shader con texture generali!!!
 
             //STATS
             stats = new Stats();
@@ -366,12 +774,49 @@
         }
 
         function Render(){
-            updateUniforms();   //da togliere considerando che la chiamo ai cambiamenti
             renderer.render(scene, camera);
+        }
+
+        function selectAO_total(indexChild){
+            switch (indexChild) {
+                case 0:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Front_Face_AO.jpeg");
+                    break;
+                case 1:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Front_Glass_AO.jpeg");
+                    break;
+                case 2:
+                    uniforms.aoMap_total.value = null;
+                    break;
+                case 3:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Back_Face_AO.jpeg");
+                    break;
+                case 4:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Glass_Inset_AO.jpeg");
+                    break;
+                case 5:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Rear_Body_AO.jpeg");
+                    break;
+                case 6:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Reactor_Support_Structure_AO.jpeg");
+                    break;
+                case 7:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Light_Blocker_AO.jpeg");
+                    break;
+                case 8:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Stand_Main_Assembly_AO.jpeg");
+                    break;
+                case 9:
+                    uniforms.aoMap_total.value = loadTexture("textures/Ambient_Occlusions/Stand_Base_AO.jpeg");
+                    break;  
+                default:
+                    break;
+            }
         }
 
         //FUNZIONE PER APPLICARE IL MATERIALE PASSATO AL FIGLIO SELEZIONATO
         function materialApply(obj, materialToApply, indexChild){
+            selectAO_total(indexChild);
             while(!obj.children[0].isMesh){
             obj = obj.children[0];
             }
@@ -387,9 +832,22 @@
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                 texture.offset.set(0, 0);
                 texture.needUpdate = true;
-                Render();   //chiamare Update uniforms
+                Render();   //chiamare Update uniforms?
             });
             return texture;
+        }
+
+        //FUNZIONE COSTRUZIONE ENVIRONMENT MAP
+        function loadEnv(dir){
+            var cube_loader = new THREE.CubeTextureLoader().setPath(dir);
+            textureEnv = cube_loader.load([
+                'posx.png', 'negx.png',
+                'posy.png', 'negy.png',
+                'posz.png', 'negz.png'
+            ]);
+            textureEnv.minFilter = THREE.LinearMipMapLinearFilter;
+            Render();   //chiamare update uniforms?
+            return textureEnv;
         }
 
         //FUNZIONE ADATTAMENTO SCHERMO
@@ -399,87 +857,96 @@
             camera.updateProjectionMatrix();
         }
 
-        //FUNZIONI GESTIONE GUI
-        function clearGUI(){
-            if(gui){
-                gui.destroy();
+        function compare(string){
+            if(string == "component"){
+                return 0;
+            } else if(string == "texture"){
+                return 1;
+            } else if(string == "lighting"){
+                return 2;
+            } else if(string == "sfondo"){
+                return 3;
             }
-            gui = new dat.GUI();
-            gui.open();
         }
 
-        function buildGUI(){
-            clearGUI();
-            lightSettings = gui.addFolder('Light Parameters 1');
-            lightSettings.add(lightParameters1, 'red').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters1, 'green').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters1, 'blue').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters1, 'intensity').min(0).max(1).onChange( function(newVal){ Render() });
-
-            lightSettings = gui.addFolder('Light Parameters 2');
-            lightSettings.add(lightParameters2, 'red').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters2, 'green').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters2, 'blue').min(0).max(1).onChange( function(newVal){ Render() });
-            lightSettings.add(lightParameters2, 'intensity').min(0).max(1).onChange( function(newVal){ Render() });
-
-            // ambientLightSettings = gui.addFolder('Ambient Light Parameters');
-            // ambientLightSettings.add(ambientLightParameters, 'red').min(0).max(1).onChange(function(newVal){ Render() });
-            // ambientLightSettings.add(ambientLightParameters, 'green').min(0).max(1).onChange(function(newVal){ Render() });
-            // ambientLightSettings.add(ambientLightParameters, 'blue').min(0).max(1).onChange(function(newVal){ Render() });
-            // ambientLightSettings.add(ambientLightParameters, 'intensity').min(0).max(100).onChange(function(newVal){ Render() });
-
-            textureSettings = gui.addFolder('Texture Parameters');
-            textureSettings.add(textureParameters, 'material', ['Wood_StaggeredFloorPlanks', 'Misc_SolarPanelLarge', 'Concrete_RockyFoundation', 'Metal_ThickGrating']).onChange(function(newVal){
-                diffuseMap = loadTexture("textures/materials/" + newVal + "_Diffuse.png");
-                specularMap = loadTexture("textures/materials/" + newVal + "_Specular.png");
-                roughnessMap = loadTexture("textures/materials/" + newVal + "_Roughness.png");
-                normalMap = loadTexture("textures/materials/" + newVal + "_Normal.png");
-                aoMap = loadTexture("textures/materials/" + newVal + "_Ambient_Occlusion.png");
-                Render();
-            });
-            textureSettings.add(textureParameters, 'normalScale').min(-3).max(3).onChange(function(newVal){ Render() });
-            textureSettings.add(textureParameters, 'repeatS').min(0.1).max(10).onChange(function(newVal){ Render() });
-            textureSettings.add(textureParameters, 'repeatT').min(0.1).max(10).onChange(function(newVal){ Render() });
+        function compareMaterial(string){
+            if(string == "Basic_Steel"){
+                return 1;
+            } else if(string == "CarbonFiber"){
+                return 1;
+            } else if(string == "Malachite"){
+                return 1;
+            } else if(string == "rubberisedPlastic"){
+                return 1;
+            } else {
+                return 0;
+            }
         }
 
-        function updateUniforms(){
-            uniforms.clight1.value = new THREE.Vector3(lightParameters1.red * lightParameters1.intensity, lightParameters1.green * lightParameters1.intensity, lightParameters1.blue * lightParameters1.intensity);
-            uniforms.clight2.value = new THREE.Vector3(lightParameters2.red * lightParameters2.intensity, lightParameters2.green * lightParameters2.intensity, lightParameters2.blue * lightParameters2.intensity);
-            uniforms.textureRepeat.value = new THREE.Vector2(textureParameters.repeatS, textureParameters.repeatT);
-            uniforms.diffuseMap.value = diffuseMap;
-            uniforms.specularMap.value = specularMap;
-            uniforms.roughnessMap.value = roughnessMap;
-            uniforms.normalMap.value = normalMap;
-            uniforms.normalScale.value = new THREE.Vector2(textureParameters.normalScale, textureParameters.normalScale);
-            uniforms.aoMap.value = aoMap;
-            //uniforms.ambientLight.value = new THREE.Vector3(ambientLightParameters.red * ambientLightParameters.intensity, ambientLightParameters.green * ambientLightParameters.intensity, ambientLightParameters.blue * ambientLightParameters.intensity);
-        }
-
-        function updateUniforms_new(arg1, arg2){
-            switch (arg1) {
-                case arg1 == "component":
+        function updateUniforms(arg1, arg2){
+            switch (compare(arg1)) {
+                case 0:
                     materialApply(gltf.scene, ourMaterial, arg2);
                     Render();
                     break;
-                case arg1 == "texture":
-                    uniforms.diffuseMap.value = loadTexture("textures/materials/" + arg2 + "_Diffuse.png");
-                    uniforms.specularMap.value = loadTexture("textures/materials/" + arg2 + "_Specular.png");
-                    uniforms.roughnessMap.value = loadTexture("textures/materials/" + arg2 + "_Roughness.png");
-                    uniforms.normalMap.value = loadTexture("textures/materials/" + arg2 + "_Normal.png");
-                    uniforms.aoMap.value = loadTexture("textures/materials/" + arg2 + "_Ambient_Occlusion.png");
+                case 1:
+                    if(compareMaterial(arg2) == 0){
+                        uniforms.diffuseMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Diffuse.png");
+                        uniforms.specularMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Specular.png");
+                        uniforms.roughnessMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Roughness.png");
+                        uniforms.normalMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Normal.png");
+                        uniforms.aoMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Ambient_Occlusion.png");
+                        if(ourMaterial.fragmentShader == fs){
+                            ourMaterial.fragmentShader = fs;
+                        } else if(ourMaterial.fragmentShader == fs_metal){
+                            ourMaterial.fragmentShader = fs;
+                        } else {
+                            ourMaterial.fragmentShader = fs2;
+                        }
+                    } else if(compareMaterial(arg2) == 1){
+                        uniforms.roughnessMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Roughness.png");
+                        uniforms.normalMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Normal.png");
+                        uniforms.baseColorMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Base_Color.png");
+                        uniforms.metalnessMap.value = loadTexture("textures/materials/" + arg2 + "/" + arg2 + "_Metallic.png");
+                        if(ourMaterial.fragmentShader == fs){
+                            ourMaterial.fragmentShader = fs_metal;
+                        } else if(ourMaterial.fragmentShader == fs_metal){
+                            ourMaterial.fragmentShader = fs_metal;
+                        } else {
+                            ourMaterial.fragmentShader = fs_metal2;
+                        }
+                    }
                     Render();
                     break;
-                case arg1 == "lighting":
-                    uniforms.clight1.value = arg2;
-                    uniforms.clight2.value = arg2;
+                case 2:
+                    var light = arg2
+                    uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
+                    uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
                     break;
-                case arg1 == "sfondo":
+                case 3:
                     if(arg2 == "bianco"){
-                        uniforms.ambientLight.value = new THREE.Vector3(0.2, 0.2, 0.2);
-                        ourMaterial.fragmentShader = fs2;   //creare un fragment shader che faccia uguale all'altro ma non utilizzi la envmap e per l'AO usi l'ambient light
+                        uniforms.ambientLight.value = new THREE.Vector3(0.2 * 0.5, 0.2 * 0.5, 0.2 * 0.5);
+                        if(ourMaterial.fragmentShader == fs){
+                            ourMaterial.fragmentShader = fs2;
+                        } else if(ourMaterial.fragmentShader == fs2){
+                            ourMaterial.fragmentShader = fs2;
+                        } else {
+                            ourMaterial.fragmentShader = fs_metal2;
+                        }
+                        scene.background = null;
                     } else {
+                        textureCube = loadEnv("textures/cubemap/" + arg2 + "/");
                         uniforms.envMap.value = textureCube;
+                        if(ourMaterial.fragmentShader == fs){
+                            ourMaterial.fragmentShader = fs;
+                        } else if(ourMaterial.fragmentShader == fs2){
+                            ourMaterial.fragmentShader = fs;
+                        } else {
+                            ourMaterial.fragmentShader = fs_metal;
+                        }
+                        scene.background = textureCube;
                     }
+                    Render();
                     break;
                 default:
                     break;
@@ -487,8 +954,10 @@
         }
 
         Start();
-        buildGUI();
         Update();
         Render();
+
+        //trovare texture che funzionino bene
+        //trovare envmap adeguate
     </script>
 </body>
