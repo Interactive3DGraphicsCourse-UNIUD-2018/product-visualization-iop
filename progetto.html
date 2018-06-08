@@ -475,7 +475,7 @@
             vec3 outRadianceEnv = envLight * BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
 
             //all lights
-            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap, uVv).xyz) + (envLight * cdiff * texture2D(aoMap_total, uVv).xyz);
+            vec3 outRadianceTOT = outRadiance1 + outRadiance2 + outRadianceEnv + (envLight * cdiff * texture2D(aoMap_total, uVv).xyz);
             // gamma encode
             gl_FragColor = vec4(pow(outRadianceTOT, vec3(1.0/2.2)), 1.0);
         }
@@ -672,7 +672,7 @@
             }
 
             aoMap_total = null;
-            env = "giardino";
+            env = "appartamento";
             textureCube = loadEnv("textures/cubemap/" + env + "/");
 
             uniforms = {
