@@ -1,7 +1,7 @@
 0 Reactor_Front_Face		modify
 1 Reactor_Front_Glass		don't modify
 2 Reactor_Light_Emitter		don't modify
-3 Reactor_Back_Face		don't modify
+3 Reactor_Back_Face		modify
 4 Reactor_Glass_Inset		don't modify
 5 Reactor_Rear_Body		modify
 6 Reactor_Support_Structure	modify
