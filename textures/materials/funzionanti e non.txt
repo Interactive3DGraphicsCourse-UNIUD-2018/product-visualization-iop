@@ -1,0 +1,12 @@
+funzionanti:
+Basic Steel
+Carbon Fiber
+Malachite
+Copper
+wood
+
+
+non funzionanti:
+platinum
+rubberised plastic
+wood walnut
