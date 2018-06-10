@@ -967,9 +967,10 @@
 							Render();
 							break;
 						case 2:
-							var light = arg2;
+							var light = arg2
 							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
 							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
+							Render();
 							break;
 						case 3:
 							if(arg2 == "bianco"){
@@ -997,13 +998,13 @@
 							Render();
 							break;
 						default:
+							Render();
 							break;
 					}
 				}
 		
 				Start();
 				Update();
-				Render();
 		
 				//trovare texture che funzionino bene
 			</script>
