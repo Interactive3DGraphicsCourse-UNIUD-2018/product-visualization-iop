@@ -74,3 +74,6 @@
 - Per la personalizzazione è stata creata una funzione di update che gestisca i parametri inseriti dall'utente e aggiorni il materiale in base a questi
 - Per i materiali sprovvisti di diffuse e specular ma gestiti con baseColor e metalness è stato creato uno shader apposito
 - Nel caso di sfondo bianco al posto dello shader che calcola la luce ambientale dalla envmap è stato creato uno shader che utilizza una ambient light generica prefissata anche se questa scelta prevede una sovrastima della luce
+
+## 10/06/2018
+- Sono stati scaricati dei materiali e gli shader corretti ove serviva, purtroppo è stato riscontrato un problema sul modello che provoca una riflessione speculare in alcuni punti anche se il materiale non la presenta.
