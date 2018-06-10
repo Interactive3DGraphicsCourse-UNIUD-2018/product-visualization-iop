@@ -657,6 +657,7 @@
 				var textureCube, env, loader;
 				var plastic, steel, temperedSteel, copper, carbonFiber, malachite;
 				var selectedComponent;
+				var componentDefault = 0;
 		
 				function Start(){
 					scene = new THREE.Scene();
@@ -1065,28 +1066,53 @@
 					switch (compare(arg1)) {
 						case 0:
 							selectedComponent = arg2.options[arg2.selectedIndex];
+							componentDefault = 1;
 							Render();
 							break;
 						case 1:
 							var world = scene.children[1];
 							switch (compareMaterial(arg2)) {
 								case 0:
-									materialApply(world, steel, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, steel, componentDefault);
+									} else {
+										materialApply(world, steel, selectedComponent.value);
+									}
 									break;
 								case 1:
-									materialApply(world, carbonFiber, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, carbonFiber, componentDefault);
+									} else {
+										materialApply(world, carbonFiber, selectedComponent.value);
+									}
 									break;
 								case 2:
-									materialApply(world, malachite, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, malachite, componentDefault);
+									} else {
+										materialApply(world, malachite, selectedComponent.value);
+									}
 									break;
 								case 3:
-									materialApply(world, plastic, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, plastic, componentDefault);
+									} else {
+										materialApply(world, plastic, selectedComponent.value);
+									}
 									break;
 								case 4:
-									materialApply(world, temperedSteel, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, temperedSteel, componentDefault);
+									} else {
+										materialApply(world, temperedSteel, selectedComponent.value);
+									}
 									break;
 								case 5:
-									materialApply(world, copper, selectedComponent.value);
+									if (componentDefault == 0) {
+										materialApply(world, copper, componentDefault);
+									} else {
+										materialApply(world, copper, selectedComponent.value);
+									}
 									break;
 								default:
 									break;
