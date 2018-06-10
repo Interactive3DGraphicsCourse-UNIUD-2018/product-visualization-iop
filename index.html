@@ -654,7 +654,7 @@
 				var lightParameters1, lightParameters2, textureParameters, uniforms, clight;
 				var diffuseMap, specularMap, roughnessMap, normalMap, aoMap, envMap, metalnessMap, aoMap_total;
 				var ambientLightParameters;
-				var textureCube, env;
+				var textureCube, env, ourMaterial;
 		
 				function Start(){
 					scene = new THREE.Scene();
@@ -777,9 +777,9 @@
 						shaderTextureLOD: true //set to use shader texture LOD
 					}
 					if(textureParameters.metalness == 0){
-						var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs2, extensions: materialExtensions});
+						ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs2, extensions: materialExtensions});
 					} else {
-						var ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs_metal2, extensions: materialExtensions});
+						ourMaterial = new THREE.ShaderMaterial( {uniforms: uniforms, vertexShader: vs, fragmentShader: fs_metal2, extensions: materialExtensions});
 					}
 		
 					ourMaterial.needUpdate = true;
@@ -967,9 +967,11 @@
 							Render();
 							break;
 						case 2:
-							var light = arg2
+							/*var light = arg2;
 							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
-							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
+							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);*/
+
+							uniforms.clight1.value = arg2;
 							Render();
 							break;
 						case 3:
