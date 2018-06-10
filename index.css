@@ -288,6 +288,8 @@ footer > p > a { text-decoration: none;
     /* CORPO */
     .desc { text-align: left }
 
+    form { display: block }
+
     /* FOOTER */
     #torna_su { bottom: 0;
                 border-radius: 0;
