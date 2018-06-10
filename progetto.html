@@ -423,6 +423,7 @@
             metalness = texture2D(metalnessMap, uVv * textureRepeat).r;
             roughness = texture2D(roughnessMap, uVv * textureRepeat).r;
             baseColor = texture2D(baseColorMap, uVv * textureRepeat).rgb;
+            baseColor = pow( baseColor, vec3(2.2));
 
             cspec = mix(vec3(0.04), baseColor, metalness);
             cdiff = mix(baseColor, vec3(0.0), metalness);
@@ -553,6 +554,7 @@
             metalness = texture2D(metalnessMap, uVv * textureRepeat).r;
             roughness = texture2D(roughnessMap, uVv * textureRepeat).r;
             baseColor = texture2D(baseColorMap, uVv * textureRepeat).rgb;
+            baseColor = pow( baseColor, vec3(2.2));
 
             cspec = mix(vec3(0.04), baseColor, metalness);
             cdiff = mix(baseColor, vec3(0.0), metalness);
@@ -653,17 +655,16 @@
                 metalness: 1
             }
 
+            roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Roughness.png");
+            normalMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Normal.png");
+
             if(textureParameters.metalness == 0){
                 diffuseMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Diffuse.png");
                 specularMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Specular.png");
-                roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Roughness.png");
-                normalMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Normal.png");
                 aoMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Ambient_Occlusion.png");
                 baseColorMap = null;
                 metalnessMap = null;
             } else if(textureParameters.metalness == 1){
-                roughnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Roughness.png");
-                normalMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Normal.png");
                 baseColorMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Base_Color.png");
                 metalnessMap = loadTexture("textures/materials/" + textureParameters.material + "/" + textureParameters.material + "_Metallic.png");
                 diffuseMap = null;
@@ -701,8 +702,6 @@
             fs2 = document.getElementById("fragment2").textContent;
             fs_metal = document.getElementById("fragment-metalness").textContent;
             fs_metal2 = document.getElementById("fragment-metalness2").textContent;
-
-            //FARE PIù UNIFORMS DIVERSI PER OGNI SHADER COSì DA EVITARE GLI IF(){}
 
             //OGGETTI LUCI
             var lightGeometry = new THREE.SphereBufferGeometry(1, 16, 16);
@@ -877,6 +876,8 @@
             } else if(string == "Malachite"){
                 return 1;
             } else if(string == "rubberisedPlastic"){
+                return 1;
+            } else if(string == "Steel"){
                 return 1;
             } else {
                 return 0;
