@@ -654,7 +654,7 @@
 				var lightParameters1, lightParameters2, textureParameters, uniforms, clight;
 				var diffuseMap, specularMap, roughnessMap, normalMap, aoMap, envMap, metalnessMap, aoMap_total;
 				var ambientLightParameters;
-				var textureCube, env, ourMaterial;
+				var textureCube, env, ourMaterial, path;
 		
 				function Start(){
 					scene = new THREE.Scene();
@@ -670,7 +670,7 @@
 					renderer.setClearColor(0xfefefe);
 					renderer.setPixelRatio(window.devicePixelRatio);
 					document.getElementById("corpo").appendChild( renderer.domElement );
-					window.addEventListener("resize", onWindowResize, false);
+					window.addEventListener("resize", onWindowResize, true);
 		
 					//DEFINIZIONE DEGLI UNIFORMS
 					lightParameters1 = {
@@ -786,10 +786,10 @@
 					ourMaterial.needsUpdate = true;
 		 
 					//LOADER MODELLO GLTF
-					var loader = new THREE.GLTFLoader();
+					loader = new THREE.GLTFLoader();
 					loader.load('models/reattore arc v3/scene.gltf', function(gltf){
-						let path = gltf.scene;
-						for(let i = 0; i < 10; i++ ){
+						path = gltf.scene;
+						for(var i = 0; i < 10; i++ ){
 							if (i == 0 || i == 3 || i == 5 || i == 6 || i == 8 || i == 9) {
 								materialApply(path, ourMaterial, i);        
 							} else {
@@ -864,7 +864,7 @@
 				function materialApply(obj, materialToApply, indexChild){
 					selectAO_total(indexChild);
 					while(!obj.children[0].isMesh){
-					obj = obj.children[0];
+						obj = obj.children[0];
 					}
 					obj = obj.parent;
 					obj.children[indexChild].children[0].material = materialToApply;
@@ -934,7 +934,8 @@
 				function updateUniforms(arg1, arg2){
 					switch (compare(arg1)) {
 						case 0:
-							materialApply(gltf.scene, ourMaterial, arg2);
+							var selectedOption = arg2.options[arg2.selectedIndex];
+							materialApply(path, ourMaterial, selectedOption.value);
 							Render();
 							break;
 						case 1:
@@ -966,12 +967,9 @@
 							}
 							Render();
 							break;
-						case 2:
-							/*var light = arg2;
-							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);
-							uniforms.clight1.value = new THREE.Vector3(light.r * 1.0, light.g * 1.0, light.b * 1.0);*/
-
+						case 2: //non abbiamo moltiplicato per l'intensità della luce perché la vogliamo a 1.0
 							uniforms.clight1.value = arg2;
+							uniforms.clight2.value = arg2;
 							Render();
 							break;
 						case 3:
@@ -1015,13 +1013,13 @@
 			<form>
 				<fieldset>
 					<legend>Texture del reattore</legend>
-					<select>
-						<option onchange="updateUniforms('component', 0)">Front face del reattore</option>
-						<option onchange="updateUniforms('component', 3)">Back face del reattore</option>
-						<option onchange="updateUniforms('component', 5)">Corpo posteriore del reattore</option>
-						<option onchange="updateUniforms('component', 6)">Struttura di supporto del reattore</option>
-						<option onchange="updateUniforms('component', 8)">Montatura del sostegno</option>
-						<option onchange="updateUniforms('component', 9)">Base del sostegno</option>
+					<select onchange="updateUniforms('component', this)">
+						<option value="0">Front face del reattore</option>
+						<option value="3">Back face del reattore</option>
+						<option value="5">Corpo posteriore del reattore</option>
+						<option value="6">Struttura di supporto del reattore</option>
+						<option value="8">Montatura del sostegno</option>
+						<option value="9">Base del sostegno</option>
 					</select><br>
 					<button type="button" onclick="updateUniforms('texture', 'rubberisedPlastic')">Plastica</button>
 					<button type="button" onclick="updateUniforms('texture', 'metal_brushed_copper')">Rame</button>
