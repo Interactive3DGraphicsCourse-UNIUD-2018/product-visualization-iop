@@ -77,3 +77,7 @@
 
 ## 10/06/2018
 - Sono stati scaricati dei materiali e gli shader corretti ove serviva, purtroppo è stato riscontrato un problema sul modello che provoca una riflessione speculare in alcuni punti anche se il materiale non la presenta.
+- Regolata la responsiveness del menu di personalizzazione del prodotto, e ultimata la descrizione sottostante.
+- La funzione di update viene ora chiamata solo quando viene cliccato un bottone di texture/sfondo o un radio button, non quando si seleziona dalla tendina; tramite una variabile globale, al momento dell'onchange() del tag `<select>`, si "salva" il nome del componente dell'oggetto 3d sul quale andranno poi fatti gli eventuali aggiornamenti di texture.
+- L'integrazione del prototipo scritto nel file "progetto.html" nella pagina "index.html" non è stata senza sofferenze: inizialmente sono stat riscontrati problemi nella personalizzazione del prodotto sotto quasi tutti i punti di vista, successivamente nella gestione dei casi particolari di interazione e infine nell'apertura della pagina direttamente da browser (senza web server locale). Ci siamo risolti infine a utilizzare il server locale, in quanto su alcuni browser non è possibile accedere ai media presenti nel file system necessari al funzionamento dell'applicazione.
+- Per quanto riguarda gli sfondi, mentre quelli rappresentanti interni sono frutto di environment maps derivate da cube maps, quello bianco è gestito con una semplice ambient light.
