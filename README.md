@@ -31,12 +31,15 @@ Per poter visualizzare il modello 3d è necessario aprire la pagina da un web se
 |*Visualizzazione della responsiveness della pagina web (iPhone 6s)*|
 
 ## Processo di sviluppo
-Il processo di sviluppo è elencato nei dettagli all'interno del [journal](journal.md) di progetto, di seguito ne sono riportati i passi principali:
-1. 
+Il processo di sviluppo è elencato nei dettagli all'interno del [journal](journal.md) di progetto, di seguito ne sono riportati alcuni elementi importanti:
+1. **BRDF utilizzata**:
+2. **Codice iniziale**:
+3. **Illuminazione**:
+4. **Formato dell'oggetto**:
 
 ## Credits
 La nostra intenzione era quella di violare il meno possibile clausole di copyright attribuibili a nomi importanti e famosi come quelli collegabili all'Universo Cinematografico Marvel, quindi abbiamo adottato un approccio prudente e modificato tutti i nomi propri ad esso legati in modo che se ne conservasse comunque il significato. Ne derivano di conseguenza traduzioni come "l'Uomo di Ferro" e "reattore Ark".
 - Per le icone ci siamo affidati al sito [The Noun Project](https://thenounproject.com), in particolare a quelle create da [Mikicon](https://thenounproject.com/mikicon/collection/e-commerce-2/).
 - Per le texture prive di licenza ci siamo affidati al sito [Allegorithmic Share](https://share.allegorithmic.com).
 - Per il modello del reattore Arc ci siamo affidati al sito Sketchfab, e in particolare il modello è quello realizzato da [Chris Kuhn](https://sketchfab.com/models/0e826ad87cf84681ac1f0df2b7ea88c3).
-- Per alcune texture ci siamo anche affidati a [Blender](https://www.blender.org).
+- Per alcuni assets ci siamo anche affidati a [Blender](https://www.blender.org).
