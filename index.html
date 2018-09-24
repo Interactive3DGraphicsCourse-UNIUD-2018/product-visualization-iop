@@ -141,7 +141,7 @@
 				}
 		
 				vec3 FSchlick(float lDoth){
-					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 5.0));
 				}
 		
 				float DGGX(float nDoth, float alfa){
@@ -276,7 +276,7 @@
 				float roughness;
 		
 				vec3 FSchlick(float lDoth){
-					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 5.0));
 				}
 		
 				float DGGX(float nDoth, float alfa){
@@ -423,7 +423,7 @@
 				}
 		
 				vec3 FSchlick(float lDoth){
-					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 5.0));
 				}
 		
 				float DGGX(float nDoth, float alfa){
@@ -558,7 +558,7 @@
 				vec3 baseColor;
 		
 				vec3 FSchlick(float lDoth){
-					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 0.5));
+					return (cspec + (vec3(1.0) - cspec) * pow(1.0 - lDoth, 5.0));
 				}
 		
 				float DGGX(float nDoth, float alfa){
